@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 
+[GlobalClass]
 public partial class AUD_ParallelSound : AUD_Sound
 {
     [Export] private AudioStreamPolyphonic _polyphonicStream; 
