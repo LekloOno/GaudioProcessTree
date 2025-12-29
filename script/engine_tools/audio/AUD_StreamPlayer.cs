@@ -1,5 +1,6 @@
 using Godot;
 
+[GlobalClass]
 public abstract partial class AUD_StreamPlayer : Node
 {
     public abstract AudioStream Stream {get; set;}

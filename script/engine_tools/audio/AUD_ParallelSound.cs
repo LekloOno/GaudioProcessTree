@@ -15,6 +15,7 @@ public partial class AUD_ParallelSound : AUD_Sound
     public override void _Ready()
     {
         _player.Stream = _polyphonicStream;
+        _player.Play();
         _playback = _player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
     }
 
