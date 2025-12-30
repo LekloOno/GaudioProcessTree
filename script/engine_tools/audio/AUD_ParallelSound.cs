@@ -30,8 +30,8 @@ public partial class AUD_ParallelSound : AUD_Sound
         if (_voices.Count >= _maxPolyphony)
         {
             long oldestVoice = _voices.Dequeue();
-            _playback.StopStream(oldestVoice);
             _playback.SetStreamVolume(oldestVoice, -80f);
+            _playback.StopStream(oldestVoice);
         }
 
         long newVoice = _playback.PlayStream(stream, 0, 0, pitchScale);

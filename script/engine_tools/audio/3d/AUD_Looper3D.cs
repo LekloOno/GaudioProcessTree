@@ -1,7 +1,7 @@
 using Godot;
 
 [GlobalClass]
-public partial class AUD_Looper3D : AUD_Looper
+public partial class AUD_Looper3D : AUD_BaseLooper
 {
     [Export] private AudioStreamPlayer3D _player;
 
