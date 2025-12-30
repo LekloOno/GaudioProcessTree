@@ -34,6 +34,14 @@ public partial class AUD_Fader : AUD_Sound
         set => _sound.PitchScale = value;    
     }
 
+    public override void _EnterTree()
+    {
+        // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
+        // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
+        if (_sound != null)
+            _sound.VolumeDb = -80;
+    }
+
     public override void _Ready()
     {
         SetPhysicsProcess(false);
