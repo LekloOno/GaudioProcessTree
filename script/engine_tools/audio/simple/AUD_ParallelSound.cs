@@ -15,6 +15,19 @@ public partial class AUD_ParallelSound : AUD_Sound
     private readonly Queue<long> _voices = new();
     
     protected float _pitchBaseDelta;
+
+    public override float VolumeDb
+    {
+        get => _player.VolumeDb;
+        set => _player.VolumeDb = value;
+    }
+
+    public override float PitchScale
+    {
+        get => _player.PitchScale;
+        set => _player.PitchScale = value;
+    }
+    
     public override void _Ready()
     {
         _player.Stream = _polyphonicStream;

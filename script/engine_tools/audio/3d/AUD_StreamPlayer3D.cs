@@ -15,7 +15,7 @@ public partial class AUD_StreamPlayer3D : AUD_StreamPlayer
         get => _player.VolumeDb;
         set => _player.VolumeDb = value;
     }
-
+    
     public override float PitchScale
     {
         get => _player.PitchScale;
