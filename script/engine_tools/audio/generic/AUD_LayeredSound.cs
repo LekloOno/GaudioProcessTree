@@ -7,7 +7,7 @@ public partial class AUD_LayeredSound : AUD_Sound
     record OriginalSettings(float VolumeDb, float PitchScale);
 
     [Export] private Array<AUD_Sound> _layers;
-    private System.Collections.Generic.Dictionary<AUD_Sound, OriginalSettings> _originalDbs;
+    private System.Collections.Generic.Dictionary<AUD_Sound, OriginalSettings> _originalDbs = new();
     private float _dbModulation = 0f;
     private float _pitchModulation = 1f;
 

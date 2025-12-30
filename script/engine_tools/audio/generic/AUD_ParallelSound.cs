@@ -27,7 +27,7 @@ public partial class AUD_ParallelSound : AUD_Sound
         get => _player.PitchScale;
         set => _player.PitchScale = value;
     }
-    
+
     public override void _Ready()
     {
         _player.Stream = _polyphonicStream;

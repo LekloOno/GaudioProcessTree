@@ -22,6 +22,12 @@ public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
         set => _player.PitchScale = value;
     }
 
+    public override StringName Bus
+    {
+        get => _player.Bus;
+        set => _player.Bus = value;
+    }
+
     public override AudioStreamPlayback GetStreamPlayBack() =>
         _player.GetStreamPlayback();
 

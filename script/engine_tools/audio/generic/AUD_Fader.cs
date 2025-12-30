@@ -2,7 +2,7 @@ using System;
 using Godot;
 
 [GlobalClass]
-public partial class AUD_StreamLooper : AUD_Sound
+public partial class AUD_Fader : AUD_Sound
 {
     [Export] private AUD_Sound _sound;
     /// <summary>
