@@ -2,7 +2,7 @@ using System;
 using Godot;
 
 [GlobalClass]
-public partial class AUD_Fader : AUD_Sound
+public partial class AUD_Fader : AUD_Wrapper
 {
     [Export] private AUD_Sound _sound;
     /// <summary>
@@ -14,10 +14,6 @@ public partial class AUD_Fader : AUD_Sound
     /// </summary>
     [Export] private float _fadeOutTime;
     /// <summary>
-    /// Max target volume - in DB.
-    /// </summary>
-    [Export] public override float VolumeDb {get; set;} = 0f;
-    /// <summary>
     /// Stores the time at which the fade started.
     /// </summary>
     private float _fadeStart;
@@ -27,25 +23,50 @@ public partial class AUD_Fader : AUD_Sound
     private float _startVolume;
 
     private Action _onUpdate;   // Allows to bind dynamically the fade in/out delegates on update and avoid a branching
-    
-    public override float PitchScale
+
+    private float _mutedVolumeDb;
+    private float _currentFadeTime;
+    private float _currentTargetVolume;
+    private bool _muting = true;
+
+    protected override void SetBaseVolumeDb(float volume)
     {
-        get => _sound.PitchScale;
-        set => _sound.PitchScale = value;    
+        if (_muting)
+            return;
+
+        if (IsPhysicsProcessing())
+            _currentTargetVolume = VolumeDb;
+        else
+            _sound.RelativeVolumeDb = VolumeDb;
     }
+    protected override void SetRelativeVolumeDb(float volume) =>
+        SetBaseVolumeDb(volume);
+
+    protected override void SetBasePitchScale(float pitchScale) =>
+        _sound.RelativePitchScale = pitchScale;
+    protected override void SetRelativePitchScale(float pitchScale) =>
+        SetBasePitchScale(pitchScale);
 
     public override void _EnterTree()
     {
         // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
         // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
-        if (_sound != null)
-            _sound.VolumeDb = -80;
+        //if (_sound != null)
+        //{
+        //    _mutedVolumeDb = -80f - _sound.VolumeDb;
+        //    _sound.RelativeVolumeDb = _mutedVolumeDb;
+        //}
     }
 
     public override void _Ready()
     {
+        base._Ready();
         SetPhysicsProcess(false);
-        _sound.VolumeDb = -80;
+        if (_sound.VolumeDb > -80f)
+        {
+            _mutedVolumeDb = -80f - _sound.VolumeDb;
+            _sound.RelativeVolumeDb = _mutedVolumeDb;
+        }
     }
 
     /// <summary>
@@ -54,7 +75,10 @@ public partial class AUD_Fader : AUD_Sound
     public override void Play()
     {
         InitFade();
-        _onUpdate += FadeIn;
+        _muting = false;
+        _currentFadeTime = _fadeInTime;
+        _currentTargetVolume = VolumeDb;
+        _onUpdate += Fade;
     }
 
     /// <summary>
@@ -63,7 +87,10 @@ public partial class AUD_Fader : AUD_Sound
     public override void Stop()
     {
         InitFade();
-        _onUpdate += FadeOut;
+        _muting = true;
+        _currentFadeTime = _fadeOutTime;
+        _currentTargetVolume = _mutedVolumeDb;
+        _onUpdate += Fade;
     }
 
     private void InitFade()
@@ -77,24 +104,21 @@ public partial class AUD_Fader : AUD_Sound
     public override void _PhysicsProcess(double delta) =>
         _onUpdate?.Invoke();
 
-    private void Fade(Action action, float currentFadeTime, float currentTargetVolume)
+    private void Fade()
     {
         float elapsed = (PHX_Time.ScaledTicksMsec - _fadeStart)/1000f;
 
-        if (elapsed >= currentFadeTime)
+        if (elapsed >= _currentFadeTime)
         {
-            _sound.VolumeDb = currentTargetVolume;
-            _onUpdate -= action;
+            _sound.RelativeVolumeDb = _currentTargetVolume;
+            _onUpdate -= Fade;
             SetPhysicsProcess(false);
             return;
         }
 
-        float elapsedScaled = elapsed/currentFadeTime;
-        float lerped = MATH_Sound.LerpDB(_startVolume, currentTargetVolume, elapsedScaled);
+        float elapsedScaled = elapsed/_currentFadeTime;
+        float lerped = MATH_Sound.LerpDB(_startVolume, _currentTargetVolume, elapsedScaled);
         
-        _sound.VolumeDb = lerped;
+        _sound.RelativeVolumeDb = lerped;
     }
-
-    private void FadeOut() => Fade(FadeOut, _fadeOutTime, -80);
-    private void FadeIn() => Fade(FadeIn, _fadeInTime, VolumeDb);
 }

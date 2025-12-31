@@ -2,29 +2,30 @@ using Godot;
 using Godot.Collections;
 
 [GlobalClass]
-public partial class AUD_RandomSound : AUD_Sound
+public partial class AUD_RandomSound : AUD_Wrapper
 {
-    [Export] private AUD_StreamPlayer _player;
-    [Export] private Array<AudioStream> _sounds = new();
-    [Export] private float _minPitch = 1f;
-    [Export] private float _maxPitch = 1f;
+    [Export] protected AUD_StreamPlayer _player;
+    [Export] protected Array<AudioStream> _sounds = [];
+    [Export] protected float _minPitch = 1f;
+    [Export] protected float _maxPitch = 1f;
 
-    public override float VolumeDb
-    {
-        get => _player.VolumeDb;
-        set => _player.VolumeDb = value;
-    }
-    
-    public override float PitchScale
-    {
-        get => _player.PitchScale;
-        set => _player.PitchScale = value;
-    }
+    protected override void SetBaseVolumeDb(float volume) =>
+        _player.RelativeVolumeDb = VolumeDb;
+    protected override void SetRelativeVolumeDb(float volume) =>
+        SetBaseVolumeDb(volume);
+
+    protected override void SetBasePitchScale(float pitchScale) =>
+        _player.RelativePitchScale = PitchScale * _randomPitch;
+    protected override void SetRelativePitchScale(float pitchScale) =>
+        SetBasePitchScale(pitchScale);
+
+    private float _randomPitch = 1f;
 
     public override void Play()
     {
         _player.Stream = _sounds.PickRandom();
-        _player.PitchScale = (float)GD.RandRange(_minPitch, _maxPitch);
+        _randomPitch = (float)GD.RandRange(_minPitch, _maxPitch);
+        _player.RelativePitchScale = _randomPitch * PitchScale;
         _player.Play();
     }
 

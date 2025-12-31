@@ -13,13 +13,12 @@ public partial class AUD_StreamPlayer3D : AUD_StreamPlayer
     public override float VolumeDb
     {
         get => _player.VolumeDb;
-        set => _player.VolumeDb = value;
+        protected set => _player.VolumeDb = value;
     }
-    
     public override float PitchScale
     {
         get => _player.PitchScale;
-        set => _player.PitchScale = value;
+        protected set => _player.PitchScale = value;
     }
 
     public override StringName Bus
