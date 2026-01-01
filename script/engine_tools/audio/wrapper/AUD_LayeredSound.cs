@@ -6,7 +6,7 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 {
     record OriginalSettings(float VolumeDb, float PitchScale);
 
-    [Export] private Array<AUD_Sound> _layers;
+    [Export] private Array<AUD_Sound> _layers = [];
 
     private void SetLayersVolumeDb(float volumeDb)
     {

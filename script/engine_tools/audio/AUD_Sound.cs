@@ -21,11 +21,8 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     public abstract float VolumeDb {get; protected set;}
     public abstract float PitchScale {get; protected set;}
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
-        if (!Engine.IsEditorHint())
-            return;
-
         SetBaseVolumeDb(_baseVolumeDb);
         SetBasePitchScale(_basePitchScale);
     }

@@ -40,7 +40,7 @@ public partial class AUD_Fader : AUD_Wrapper
 
         if (IsPhysicsProcessing())
             _currentTargetVolume = volumeDb;
-        else
+        else if (_sound != null)
             _sound.RelativeVolumeDb = volumeDb;
     }
 
@@ -50,13 +50,20 @@ public partial class AUD_Fader : AUD_Wrapper
     protected override void SetRelativeVolumeDb(float volumeDb) =>
         SetFaderVolumeDb(BaseVolumeDb + volumeDb);
 
-    protected override void SetBasePitchScale(float pitchScale) =>
+    protected override void SetBasePitchScale(float pitchScale)
+    {
+        if (_sound == null) return;
         _sound.RelativePitchScale = pitchScale * RelativePitchScale;
-    protected override void SetRelativePitchScale(float pitchScale) =>
+    }
+    protected override void SetRelativePitchScale(float pitchScale)
+    {
+        if (_sound == null) return;
         _sound.RelativePitchScale = BasePitchScale * pitchScale;
+    }
 
     public override void _EnterTree()
     {
+        base._EnterTree();
         // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
         // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
         if (Engine.IsEditorHint())
