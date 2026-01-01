@@ -1,18 +1,18 @@
 using System;
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public abstract partial class AUD_Sound : Node, AUD_ISound
 {
     /// <summary>
     /// Not editable in run time for now.
     /// </summary>
-    [Export] private float _baseVolumeDb = 0f;
+    private float _baseVolumeDb = 0f;
     
     /// <summary>
     /// Not editable in run time for now.
     /// </summary>
-    [Export] private float _basePitchScale = 1f;
+    private float _basePitchScale = 1f;
     protected float _relativeVolumeDb = 0f;
     protected float _relativePitchScale = 1f;
 
@@ -23,11 +23,14 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
 
     public override void _Ready()
     {
-        SetBaseVolumeDb(_baseVolumeDb);
-        SetBasePitchScale(_basePitchScale);
+        //if (Engine.IsEditorHint())
+        //    return;
+
+        //SetBaseVolumeDb(_baseVolumeDb);
+        //SetBasePitchScale(_basePitchScale);
     }
 
-    public float BaseVolumeDb
+    [Export] public float BaseVolumeDb
     {
         get => _baseVolumeDb;
         protected set
@@ -46,7 +49,7 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     /// <param name="volumeDb">The value BaseVolumeDb will be set at after the operation.</param>
     protected abstract void SetBaseVolumeDb(float volumeDb);
 
-    public float BasePitchScale
+    [Export] public float BasePitchScale
     {
         get => _basePitchScale;
         protected set

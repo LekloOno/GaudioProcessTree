@@ -1,6 +1,6 @@
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public abstract partial class AUD_StreamPlayer : AUD_Sound
 {
     public abstract AudioStream Stream {get; set;}

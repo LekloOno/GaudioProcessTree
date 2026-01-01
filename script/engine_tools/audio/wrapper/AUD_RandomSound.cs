@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public partial class AUD_RandomSound : AUD_Wrapper
 {
     [Export] protected AUD_StreamPlayer _player;

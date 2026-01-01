@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public partial class AUD_LayeredSound : AUD_Wrapper
 {
     record OriginalSettings(float VolumeDb, float PitchScale);

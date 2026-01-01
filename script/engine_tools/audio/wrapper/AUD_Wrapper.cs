@@ -1,6 +1,6 @@
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public abstract partial class AUD_Wrapper : AUD_Sound
 {
     public override float VolumeDb

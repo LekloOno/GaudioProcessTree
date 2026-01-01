@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public partial class AUD_Fader : AUD_Wrapper
 {
     [Export] private AUD_Sound _sound;
@@ -66,6 +66,9 @@ public partial class AUD_Fader : AUD_Wrapper
     {
         base._Ready();
         SetPhysicsProcess(false);
+        if (Engine.IsEditorHint())
+            return;
+        
         if (_sound.VolumeDb > -80f)
         {
             _mutedVolumeDb = -80f - _sound.VolumeDb;

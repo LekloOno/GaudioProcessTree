@@ -1,6 +1,6 @@
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public partial class AUD_StreamPlayer2D : AUD_StreamPlayer
 {
     [Export] private AudioStreamPlayer2D _player;

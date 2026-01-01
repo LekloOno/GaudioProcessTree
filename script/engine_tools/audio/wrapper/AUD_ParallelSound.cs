@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-[GlobalClass]
+[GlobalClass, Tool]
 public partial class AUD_ParallelSound : AUD_RandomSound
 {
     record Voice(long Id, float RandomPitch);
