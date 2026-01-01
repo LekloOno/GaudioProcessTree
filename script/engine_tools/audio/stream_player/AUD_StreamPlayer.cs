@@ -17,10 +17,4 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
 
     protected override void SetRelativePitchScale(float pitchScale) =>
         PitchScale = BasePitchScale * pitchScale;
-
-    public override void _EnterTree()
-    {
-        BaseVolumeDb = VolumeDb;
-        BasePitchScale = PitchScale;
-    }
 }

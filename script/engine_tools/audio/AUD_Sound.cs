@@ -21,6 +21,12 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     public abstract float VolumeDb {get; protected set;}
     public abstract float PitchScale {get; protected set;}
 
+    public override void _Ready()
+    {
+        SetBaseVolumeDb(_baseVolumeDb);
+        SetBasePitchScale(_basePitchScale);
+    }
+
     public float BaseVolumeDb
     {
         get => _baseVolumeDb;
