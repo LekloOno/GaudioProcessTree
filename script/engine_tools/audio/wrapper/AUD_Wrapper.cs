@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 [GlobalClass, Tool]
@@ -22,17 +23,20 @@ public abstract partial class AUD_Wrapper : AUD_Sound
         if (!Engine.IsEditorHint())
             return;
         
-        ChildEnteredTree += OnChildEnteredTree;
-        ChildExitingTree += OnChildExitingTree;
+        Callable childEntered = Callable.From<Node>(OnChildEnteredTree);
+        Callable childExiting = Callable.From<Node>(OnChildExitingTree);
+
+        if (!IsConnected(Node.SignalName.ChildEnteredTree, childEntered))
+            Connect(Node.SignalName.ChildEnteredTree, childEntered);
+
+        if (!IsConnected(Node.SignalName.ChildExitingTree, childExiting))
+            Connect(Node.SignalName.ChildExitingTree, childExiting);
     }
 
     public override void _ExitTree()
     {
         if (!Engine.IsEditorHint())
             return;
-        
-        ChildEnteredTree -= OnChildEnteredTree;
-        ChildExitingTree -= OnChildExitingTree;
     }
 
     private void OnChildEnteredTree(Node node)
@@ -57,7 +61,7 @@ public abstract partial class AUD_Wrapper : AUD_Sound
     {
         if (!Engine.IsEditorHint())
             return;
-
+        
         if (node is not AUD_Sound sound)
             return;
 
