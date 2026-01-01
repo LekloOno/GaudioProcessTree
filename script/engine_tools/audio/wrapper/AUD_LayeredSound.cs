@@ -8,6 +8,12 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     [Export] private Array<AUD_Sound> _layers = [];
 
+    protected override void OnSoundChildEnteredTree(AUD_Sound sound) =>
+        _layers.Add(sound);
+
+    protected override void OnSoundChildExitingTree(AUD_Sound sound) =>
+        _layers.Remove(sound);
+
     private void SetLayersVolumeDb(float volumeDb)
     {
         foreach (AUD_Sound layer in _layers)

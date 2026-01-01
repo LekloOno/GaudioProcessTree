@@ -83,6 +83,29 @@ public partial class AUD_Fader : AUD_Wrapper
             _sound.RelativeVolumeDb = VolumeDb;
         SetPhysicsProcess(!_startMuted);
     }
+
+    protected override void OnSoundChildEnteredTree(AUD_Sound sound) =>
+        _sound ??= sound;
+
+    protected override void OnSoundChildExitingTree(AUD_Sound sound)
+    {
+        if (_sound != sound)
+            return;
+        
+        foreach (Node node in GetChildren())
+        {
+            if (node == sound)
+                continue;
+            if (node is not AUD_Sound newSound)
+                continue;
+            
+            _sound = newSound;
+            return;
+        }
+
+        _sound = null;
+    }
+
     /// <summary>
     /// Starts Fading in.
     /// </summary>

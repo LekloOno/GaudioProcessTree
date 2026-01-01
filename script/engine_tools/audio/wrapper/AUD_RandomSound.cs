@@ -42,4 +42,34 @@ public partial class AUD_RandomSound : AUD_Wrapper
     }
 
     public override void Stop() => _player.Stop();
+
+    protected override void OnSoundChildEnteredTree(AUD_Sound sound)
+    {
+        if (sound is not AUD_StreamPlayer player)
+            return;
+
+        _player ??= player;
+    }
+
+    protected override void OnSoundChildExitingTree(AUD_Sound sound)
+    {
+        if (sound is not AUD_StreamPlayer player)
+            return;
+
+        if (_player != player)
+            return;
+    
+        foreach (Node node in GetChildren())
+        {
+            if (node == sound)
+                continue;
+            if (node is not AUD_StreamPlayer newPlayer)
+                continue;
+            
+            _player = newPlayer;
+            return;
+        }
+
+        _player = null;
+    }
 }
