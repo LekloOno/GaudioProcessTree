@@ -1,36 +1,87 @@
+using System;
 using Godot;
 
 [GlobalClass]
 public abstract partial class AUD_Sound : Node, AUD_ISound
 {
+    /// <summary>
+    /// Not editable in run time for now.
+    /// </summary>
+    [Export] private float _baseVolumeDb = 0f;
+    
+    /// <summary>
+    /// Not editable in run time for now.
+    /// </summary>
+    [Export] private float _basePitchScale = 1f;
+    protected float _relativeVolumeDb = 0f;
+    protected float _relativePitchScale = 1f;
+
     public abstract void Play();
     public abstract void Stop();
-    /// <summary>
-    /// Retrieves the current effective VolumeDb of this sound. <br/>
-    /// Cannot be modified directly, you should either modify the BaseVolumeDb in the inspector (if exposed), or RelativeVolumeDb externally.
-    /// </summary>
     public abstract float VolumeDb {get; protected set;}
-    /// <summary>
-    /// Retrieves the current effective PitchScale of this sound.
-    /// Cannot be modified directly, you should either modify the BasePitchScale in the inspector (if exposed), or RelativePitchScale externally.
-    /// </summary>
     public abstract float PitchScale {get; protected set;}
+
+    public float BaseVolumeDb
+    {
+        get => _baseVolumeDb;
+        protected set
+        {
+            SetBaseVolumeDb(value);
+            _baseVolumeDb = value;
+        }
+    }
+
+    // Maybe add a float "nextVolumeDb" in the setters specifiers to make it explicit, instead of having to manually compute it
+    // (like pitchScale * RelativePitchScale when setting the BasePitchScale for example)
+
     /// <summary>
-    /// The original/initial VolumeDb of this sound. <br/>
+    /// Specify some additionnal custom behavior before the internal BaseVolumeDb is set to volumeDb.
     /// </summary>
-    public abstract float BaseVolumeDb {get; protected set;}
+    /// <param name="volumeDb">The value BaseVolumeDb will be set at after the operation.</param>
+    protected abstract void SetBaseVolumeDb(float volumeDb);
+
+    public float BasePitchScale
+    {
+        get => _basePitchScale;
+        protected set
+        {
+            SetBasePitchScale(value);
+            _basePitchScale = value;
+        }
+    }
     /// <summary>
-    /// The original/initial PitchScale of this sound. <br/>
+    /// Specify some additionnal custom behavior before the internal BasePitchScale is set to pitchScale.
     /// </summary>
-    public abstract float BasePitchScale {get; protected set;}
+    /// <param name="pitchScale">The value BasePitchScale will be set at after the operation.</param>
+    protected abstract void SetBasePitchScale(float pitchScale);
+
+    public float RelativeVolumeDb
+    {
+        get => _relativeVolumeDb;
+        set
+        {
+            SetRelativeVolumeDb(value);
+            _relativeVolumeDb = value;
+        }
+    }
     /// <summary>
-    /// Allows to modify the original VolumeDb of the sound, without overriding it. <br/>
-    /// Assigning it a value of 0 will have no effect.
+    /// Specify some additionnal custom behavior before the internal RelativeVolumeDb is set to pitchScale.
     /// </summary>
-    public abstract float RelativeVolumeDb {get; set;}
+    /// <param name="volumeDb">The value RelativeVolumeDb will be set at after the operation.</param>
+    protected abstract void SetRelativeVolumeDb(float volumeDb);
+
+    public float RelativePitchScale
+    {
+        get => _relativePitchScale;
+        set
+        {
+            SetRelativePitchScale(value);
+            _relativePitchScale = value;
+        }
+    }
     /// <summary>
-    /// Allows to modify the original PichScale of the sound, without overriding it. <br/>
-    /// Assigning it a value of 1 will have no effect.
+    /// Specify some additionnal custom behavior before the internal RelativePitchScale is set to pitchScale.
     /// </summary>
-    public abstract float RelativePitchScale {get; set;}
+    /// <param name="pitchScale">The value RelativePitchScale will be set at after the operation.</param>
+    protected abstract void SetRelativePitchScale(float pitchScale);
 }

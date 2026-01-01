@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Godot;
-using Godot.Collections;
 
 [GlobalClass]
 public partial class AUD_ParallelSound : AUD_RandomSound
@@ -11,16 +10,22 @@ public partial class AUD_ParallelSound : AUD_RandomSound
     private AudioStreamPlaybackPolyphonic _playback;
     private readonly Queue<Voice> _voices = new();
 
-    private float AbsolutePitch(float randomPitch) =>
-        randomPitch * PitchScale * _player.PitchScale;
+    private float AbsolutePitch(float randomPitch, float parallelPitch) =>
+        randomPitch * parallelPitch * _player.PitchScale;
 
-    protected override void SetBasePitchScale(float pitchScale)
+    private void SetParallelPitchScale(float pitchScale)
     {
         foreach (Voice voice in _voices)
-            _playback.SetStreamPitchScale(voice.Id, AbsolutePitch(voice.RandomPitch));
+        {
+            float voicePitch = AbsolutePitch(voice.RandomPitch, pitchScale);
+            _playback.SetStreamPitchScale(voice.Id, voicePitch);
+        }
     }
+
+    protected override void SetBasePitchScale(float pitchScale) =>
+        SetParallelPitchScale(pitchScale * RelativePitchScale);
     protected override void SetRelativePitchScale(float pitchScale) =>
-        SetBasePitchScale(pitchScale);
+        SetParallelPitchScale(BasePitchScale * pitchScale);
     
     protected float _pitchBaseDelta;
 
@@ -43,7 +48,8 @@ public partial class AUD_ParallelSound : AUD_RandomSound
             _playback.StopStream(oldestVoice);
         }
 
-        long newVoice = _playback.PlayStream(stream, 0, 0, AbsolutePitch(randomPitch));
+        float pitchScale = AbsolutePitch(randomPitch, PitchScale);
+        long newVoice = _playback.PlayStream(stream, 0, 0, pitchScale);
         _voices.Enqueue(new(newVoice, randomPitch));
     }
 

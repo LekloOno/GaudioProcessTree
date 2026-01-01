@@ -8,21 +8,27 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     [Export] private Array<AUD_Sound> _layers;
 
-    protected override void SetBaseVolumeDb(float volume)
+    private void SetLayersVolumeDb(float volumeDb)
     {
         foreach (AUD_Sound layer in _layers)
-            layer.RelativeVolumeDb = VolumeDb;
+            layer.RelativeVolumeDb = volumeDb;
     }
-    protected override void SetRelativeVolumeDb(float volume) =>
-        SetBaseVolumeDb(volume);
+    protected override void SetBaseVolumeDb(float volumeDb) =>
+        SetLayersVolumeDb(volumeDb + RelativeVolumeDb);
 
-    protected override void SetBasePitchScale(float pitchScale)
+    protected override void SetRelativeVolumeDb(float volumeDb) =>
+        SetLayersVolumeDb(BaseVolumeDb + volumeDb);
+
+    private void SetLayersPitchScale(float pitchScale)
     {
         foreach (AUD_Sound layer in _layers)
-            layer.RelativePitchScale = PitchScale;
+            layer.RelativePitchScale = pitchScale;
     }
+    protected override void SetBasePitchScale(float pitchScale) =>
+        SetLayersPitchScale(pitchScale * RelativePitchScale);
+
     protected override void SetRelativePitchScale(float pitchScale) =>
-        SetBasePitchScale(pitchScale);
+        SetLayersPitchScale(BasePitchScale * pitchScale);
 
     public override void Play()
     {

@@ -29,23 +29,27 @@ public partial class AUD_Fader : AUD_Wrapper
     private float _currentTargetVolume;
     private bool _muting = true;
 
-    protected override void SetBaseVolumeDb(float volume)
+    private void SetFaderVolumeDb(float volumeDb)
     {
         if (_muting)
             return;
 
         if (IsPhysicsProcessing())
-            _currentTargetVolume = VolumeDb;
+            _currentTargetVolume = volumeDb;
         else
-            _sound.RelativeVolumeDb = VolumeDb;
+            _sound.RelativeVolumeDb = volumeDb;
     }
-    protected override void SetRelativeVolumeDb(float volume) =>
-        SetBaseVolumeDb(volume);
+
+    protected override void SetBaseVolumeDb(float volumeDb) =>
+        SetFaderVolumeDb(RelativeVolumeDb + volumeDb);
+
+    protected override void SetRelativeVolumeDb(float volumeDb) =>
+        SetFaderVolumeDb(RelativeVolumeDb + volumeDb);
 
     protected override void SetBasePitchScale(float pitchScale) =>
-        _sound.RelativePitchScale = pitchScale;
+        _sound.RelativePitchScale = pitchScale * RelativePitchScale;
     protected override void SetRelativePitchScale(float pitchScale) =>
-        SetBasePitchScale(pitchScale);
+        _sound.RelativePitchScale = BasePitchScale * pitchScale;
 
     public override void _EnterTree()
     {
