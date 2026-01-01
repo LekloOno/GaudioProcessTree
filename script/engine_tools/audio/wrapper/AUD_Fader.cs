@@ -14,6 +14,10 @@ public partial class AUD_Fader : AUD_Wrapper
     /// </summary>
     [Export] private float _fadeOutTime;
     /// <summary>
+    /// Wether the sound this fader fades should start at muted or unmuted state.
+    /// </summary>
+    [Export] private bool _startMuted = true;
+    /// <summary>
     /// Stores the time at which the fade started.
     /// </summary>
     private float _fadeStart;
@@ -41,10 +45,10 @@ public partial class AUD_Fader : AUD_Wrapper
     }
 
     protected override void SetBaseVolumeDb(float volumeDb) =>
-        SetFaderVolumeDb(RelativeVolumeDb + volumeDb);
+        SetFaderVolumeDb(volumeDb + RelativeVolumeDb);
 
     protected override void SetRelativeVolumeDb(float volumeDb) =>
-        SetFaderVolumeDb(RelativeVolumeDb + volumeDb);
+        SetFaderVolumeDb(BaseVolumeDb + volumeDb);
 
     protected override void SetBasePitchScale(float pitchScale) =>
         _sound.RelativePitchScale = pitchScale * RelativePitchScale;
@@ -55,27 +59,23 @@ public partial class AUD_Fader : AUD_Wrapper
     {
         // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
         // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
-        //if (_sound != null)
-        //{
-        //    _mutedVolumeDb = -80f - _sound.VolumeDb;
-        //    _sound.RelativeVolumeDb = _mutedVolumeDb;
-        //}
-    }
-
-    public override void _Ready()
-    {
-        base._Ready();
-        SetPhysicsProcess(false);
         if (Engine.IsEditorHint())
+        {
+            SetPhysicsProcess(false);
+            return;
+        }
+
+        if (_sound == null)
             return;
         
-        if (_sound.VolumeDb > -80f)
-        {
-            _mutedVolumeDb = -80f - _sound.VolumeDb;
-            _sound.RelativeVolumeDb = _mutedVolumeDb;
-        }
-    }
+        _mutedVolumeDb = -80f - _sound.VolumeDb;
 
+        if (_startMuted)
+            _sound.RelativeVolumeDb = _mutedVolumeDb;
+        else
+            _sound.RelativeVolumeDb = VolumeDb;
+        SetPhysicsProcess(!_startMuted);
+    }
     /// <summary>
     /// Starts Fading in.
     /// </summary>

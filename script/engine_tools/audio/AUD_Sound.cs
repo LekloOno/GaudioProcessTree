@@ -23,11 +23,11 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
 
     public override void _Ready()
     {
-        //if (Engine.IsEditorHint())
-        //    return;
+        if (!Engine.IsEditorHint())
+            return;
 
-        //SetBaseVolumeDb(_baseVolumeDb);
-        //SetBasePitchScale(_basePitchScale);
+        SetBaseVolumeDb(_baseVolumeDb);
+        SetBasePitchScale(_basePitchScale);
     }
 
     [Export] public float BaseVolumeDb
