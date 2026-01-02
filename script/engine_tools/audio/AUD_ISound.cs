@@ -1,3 +1,6 @@
+/// <summary>
+/// The AUD_ISound interface defines the specification of generic sound processing tree nodes.
+/// </summary>
 public interface AUD_ISound
 {
     void Play();
@@ -24,12 +27,14 @@ public interface AUD_ISound
     float BasePitchScale {get;}
     /// <summary>
     /// Allows to modify the original VolumeDb of the sound, without overriding it. <br/>
-    /// Assigning it a value of 0 will set the sound to its original volume.
+    /// - It is additive.<br/>
+    /// - Assigning it a value of 0 will set the sound to its original volume.
     /// </summary>
     float RelativeVolumeDb {get; set;}
     /// <summary>
     /// Allows to modify the original PichScale of the sound, without overriding it. <br/>
-    /// Assigning it a value of 1 will set the sound to its original pitch.
+    /// - It is multiplicative.<br/>
+    /// - Assigning it a value of 1 will set the sound to its original pitch.
     /// </summary>
     float RelativePitchScale {get; set;}
 }

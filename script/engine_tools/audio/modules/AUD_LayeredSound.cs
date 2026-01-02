@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using Godot;
 
+/// <summary>
+/// Plays and control multiple children sound as one.
+/// </summary>
 [GlobalClass, Tool]
 public partial class AUD_LayeredSound : AUD_Module
 {

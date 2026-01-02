@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using Godot;
 
+/// <summary>
+/// AUD_StreamPlayer implementation for Godot's AudioStreamPlayer2D.
+/// </summary>
 [GlobalClass, Tool]
 public partial class AUD_StreamPlayer2D : AUD_StreamPlayer
 {

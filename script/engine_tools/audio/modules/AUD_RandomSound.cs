@@ -2,6 +2,11 @@ using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
+/// <summary>
+/// Plays a random sound on a given player, with pitchScale randomization. <br/>
+/// It does not play a random AUD_Sound ! Its child must be an AUD_StreamPlayer. <br/>
+/// Otherwize, that would imply the use of many distinct players for such a common pattern.
+/// </summary>
 [GlobalClass, Tool]
 public partial class AUD_RandomSound : AUD_Module
 {

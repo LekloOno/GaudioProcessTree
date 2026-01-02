@@ -1,6 +1,16 @@
 using System.Collections.Generic;
 using Godot;
 
+/// <summary>
+/// Specialization of AUD_RandomSound that runs each new stream Play on a parallel channel. <br/>
+/// <br/>
+/// Modification to its relative volumeDb and pitchScale still applies to all channels, but relatively to their own initial volumeDb and pitchScale. <br/>
+/// This is the default behavior for volumeDb, but modifying the pitch scale of a player usually don't affect polyphonic stream. <br/>
+/// The node provides a way to achieve it while maintaining independant base pitch. <br/>
+/// <br/>
+/// Setting the Stream of an AudioStreamPlayer stops all its currently playing sounds. AUD_RandomSound would suffer from this in cases where we need to repeatedly play. <br/>
+/// AUD_ParallelSound is thus also relevant if avoiding this issue is necessary.
+/// </summary>
 [GlobalClass, Tool]
 public partial class AUD_ParallelSound : AUD_RandomSound
 {

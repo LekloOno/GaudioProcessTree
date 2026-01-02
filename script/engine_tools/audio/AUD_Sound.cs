@@ -1,5 +1,12 @@
 using Godot;
 
+/// <summary>
+/// The AUD_Sound class defines the base abstraction and implementation of AUD_ISound sound processing tree nodes. <br/>
+/// <br/>
+/// Such tree are composed of module nodes (non-leaf) that encapsulate further nodes, until eventually reaching stream player leafs. <br/>
+/// The module nodes provide specific interfaces for various redundant processing operation like fading, layering, randomization, etc. <br/>
+/// The stream nodes bind this tree to concrete Godot AudioStreamPlayers, in a generic manner so that any "spatialness" can be relevant to the same processing tree.
+/// </summary>
 [GlobalClass, Tool]
 public abstract partial class AUD_Sound : Node, AUD_ISound
 {

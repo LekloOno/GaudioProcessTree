@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+/// <summary>
+/// Fades in and out the VolumeDb of a child AUD_Sound by respectively calling Play() and Stop().
+/// </summary>
 [GlobalClass, Tool]
 public partial class AUD_Fader : AUD_Module
 {
