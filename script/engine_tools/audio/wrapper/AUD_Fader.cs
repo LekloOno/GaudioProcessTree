@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 [GlobalClass, Tool]
 public partial class AUD_Fader : AUD_Wrapper
 {
-    [Export] private AUD_Sound _sound;
+    private AUD_Sound _sound;
     /// <summary>
     /// Time for the volume to reach _volume on start - in seconds.
     /// </summary>
@@ -61,11 +62,14 @@ public partial class AUD_Fader : AUD_Wrapper
         _sound.RelativePitchScale = BasePitchScale * pitchScale;
     }
 
-    public override void _EnterTree()
+    // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
+    // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
+    protected override void ModuleEnterTree()
     {
-        base._EnterTree();
-        // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
-        // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
+        foreach (Node node in GetChildren())
+            if (node is AUD_Sound sound)
+                _sound = sound;
+
         if (Engine.IsEditorHint())
         {
             SetPhysicsProcess(false);
@@ -84,26 +88,12 @@ public partial class AUD_Fader : AUD_Wrapper
         SetPhysicsProcess(!_startMuted);
     }
 
-    protected override void OnSoundChildEnteredTree(AUD_Sound sound) =>
-        _sound ??= sound;
-
-    protected override void OnSoundChildExitingTree(AUD_Sound sound)
+    protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
     {
-        if (_sound != sound)
-            return;
-        
-        foreach (Node node in GetChildren())
-        {
-            if (node == sound)
-                continue;
-            if (node is not AUD_Sound newSound)
-                continue;
-            
-            _sound = newSound;
-            return;
-        }
-
-        _sound = null;
+        if (sounds.Count == 0)
+            _sound = null;
+        else
+            _sound = sounds[0];
     }
 
     /// <summary>

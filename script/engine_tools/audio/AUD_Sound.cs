@@ -21,11 +21,14 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     public abstract float VolumeDb {get; protected set;}
     public abstract float PitchScale {get; protected set;}
 
-    public override void _EnterTree()
+    public sealed override void _EnterTree()
     {
         SetBaseVolumeDb(_baseVolumeDb);
         SetBasePitchScale(_basePitchScale);
+        EnterTreeSpec();
     }
+
+    protected virtual void EnterTreeSpec(){}
 
     [Export] public float BaseVolumeDb
     {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
@@ -6,13 +7,18 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 {
     record OriginalSettings(float VolumeDb, float PitchScale);
 
-    [Export] private Array<AUD_Sound> _layers = [];
+    private List<AUD_Sound> _layers = [];
 
-    protected override void OnSoundChildEnteredTree(AUD_Sound sound) =>
-        _layers.Add(sound);
+    protected override void ModuleEnterTree()
+    {
+        _layers = [];
+        foreach (Node node in GetChildren())
+            if (node is AUD_Sound sound)
+                _layers.Add(sound);
+    }
 
-    protected override void OnSoundChildExitingTree(AUD_Sound sound) =>
-        _layers.Remove(sound);
+    protected override void OnSoundChildChanged(List<AUD_Sound> sounds) =>
+        _layers = sounds;
 
     private void SetLayersVolumeDb(float volumeDb)
     {
