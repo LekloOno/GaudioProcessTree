@@ -74,8 +74,8 @@ public partial class AUD_RandomSound : AUD_Wrapper
             warnings.Add("This node has no Stream Player.\nConsider adding an AUD_StreamPlayer as a child.");
         if (TooManyStreamPlayer())
             warnings.Add("This node has multiple Stream Players.\nIt will only support one of them.");
-        if (_sounds == null || _sounds.Count == 0)
-            warnings.Add("AudioStreams must be provided for this node to function. Please provide at least one stream in its list of sounds.");
+        if (NoAudioStreams())
+            warnings.Add("AudioStreams must be provided for this node to function.\nPlease provide at least one stream in its list of sounds.");
 
         return [.. warnings];
     }
@@ -91,6 +91,18 @@ public partial class AUD_RandomSound : AUD_Wrapper
                     found = true;
 
         return false;
+    }
+
+    private bool NoAudioStreams()
+    {
+        if (_sounds == null)
+            return true;
+
+        foreach (AudioStream stream in _sounds)
+            if (stream != null)
+                return false;
+        
+        return true;
     }
 
     // +-------------------+
