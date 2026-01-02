@@ -11,7 +11,6 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     protected override void ModuleEnterTree()
     {
-        _layers = [];
         foreach (Node node in GetChildren())
             if (node is AUD_Sound sound)
                 _layers.Add(sound);
@@ -22,6 +21,9 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     private void SetLayersVolumeDb(float volumeDb)
     {
+        if (_layers == null)
+            return;
+
         foreach (AUD_Sound layer in _layers)
             layer.RelativeVolumeDb = volumeDb;
     }
@@ -33,6 +35,9 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     private void SetLayersPitchScale(float pitchScale)
     {
+        if (_layers == null)
+            return;
+            
         foreach (AUD_Sound layer in _layers)
             layer.RelativePitchScale = pitchScale;
     }

@@ -6,7 +6,7 @@ using Godot.Collections;
 public partial class AUD_RandomSound : AUD_Wrapper
 {
     protected AUD_StreamPlayer _player;
-    [Export] protected Array<AudioStream> _sounds = [];
+    [Export] protected Array<AudioStream> _sounds;
     [Export] protected float _minPitch = 1f;
     [Export] protected float _maxPitch = 1f;
     private float _randomPitch = 1f;
@@ -15,14 +15,21 @@ public partial class AUD_RandomSound : AUD_Wrapper
     {
         foreach (Node node in GetChildren())
             if (node is AUD_StreamPlayer player)
+            {
                 _player = player;
+                return;
+            }
     }
+
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
     {
         foreach (AUD_Sound sound in sounds)
             if (sound is AUD_StreamPlayer player)
+            {
                 _player = player;
+                return;
+            }
     }
 
     protected override void SetBaseVolumeDb(float volumeDb)

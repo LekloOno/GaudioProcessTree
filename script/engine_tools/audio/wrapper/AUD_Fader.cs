@@ -66,9 +66,7 @@ public partial class AUD_Fader : AUD_Wrapper
     // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
     protected override void ModuleEnterTree()
     {
-        foreach (Node node in GetChildren())
-            if (node is AUD_Sound sound)
-                _sound = sound;
+        InitSoundChild();
 
         if (Engine.IsEditorHint())
         {
@@ -86,6 +84,16 @@ public partial class AUD_Fader : AUD_Wrapper
         else
             _sound.RelativeVolumeDb = VolumeDb;
         SetPhysicsProcess(!_startMuted);
+    }
+    
+    private void InitSoundChild()
+    {
+        foreach (Node node in GetChildren())
+            if (node is AUD_Sound sound)
+            {
+                _sound = sound;
+                return;
+            }
     }
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds)

@@ -31,6 +31,9 @@ public partial class AUD_ParallelSound : AUD_RandomSound
 
     public override void _Ready()
     {
+        if (Engine.IsEditorHint())
+            return;
+            
         _player.Stream = _polyphonicStream;
         _player.Play();
         _playback = _player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
