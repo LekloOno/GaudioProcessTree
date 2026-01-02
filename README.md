@@ -2,6 +2,20 @@ This plugin provides a way to describe audio processing in a tree-like structure
 
 It has been built as part of my engine extensions in an unrelated Godot project. Thus, the commit history might be quite inconsistent as it is an abrupt git filter-repo of the original project, that included undirectly related commits to this work that might have been scrapped in the process.
 
+# Important note on dependency
+
+The plugin is almost entirely standalone, but the provided module [AUD_Fader](nodes/modules/AUD_Fader.cs) depends on another tool I made internally, that is not specific to audio, thus not included in this plugin.
+
+"PHX_Time" allows to get precise time ticks msec/usec with engine time scaling, but it has been abstracted away so you're not constrainted to use it.
+
+You have four options -
+- [**Simplest**](#simplest---deletemodifying-aud_fader) - Deleting or modifying AUD_Fader - duh
+- [**Simple**](#very-simple---no-time-scale-implementation) - Implement AUD_Time with no time scale
+- [**Medium**](#simple---use-provided-scale-implementation) - Use the provided time scale template.
+- [**Advanced**](#advanced---implement-your-own-aud_ilocaltime) - Implement your own `AUD_ILocalTime`.
+
+You can find a step by step guide of different options at the [end of this document](#aud_time-dependency).
+
 # General Idea
 
 The idea is to mimic the concepts of Node3D/2D parenting on Audio modules. You can parent any AUD_Sound derivative to any other one, and create very extensive processing chain in tree-like structures.  
@@ -33,3 +47,78 @@ That is, AUD_Sound trees are compatible with any kind of AudioStreamPlayer, no m
 # Editor integration
 
 The nodes are integrated in editor, and notably provides dedicated configuration warnings to guide the user through setting up his processing tree.
+
+# AUD_Time dependency
+
+## Simplest - Delete/Modifying AUD_Fader
+
+### Delete
+Of course, you can simply remove the [AUD_Fader](nodes/modules/AUD_Fader.cs) node. The rest of the plugin is fully standalone.
+
+You can eventually implement your own later on by extending [AUD_Module](nodes/AUD_Module.cs).
+
+### Modify
+Another simple solution is to modify the [AUD_Fader](nodes/modules/AUD_Fader.cs) node. Typically, you can simply replace all mentions of `AUD_Time.ScaledTicksMsec` by `Time.GetTicksMsec()`. Recompile, and everything should work as standalone.
+
+## Enable AUD_Fader via AUD_Time
+Indeed, to not make the plugin too rigid, I didn't assume you would use my PHX_Time script, and instead provided an [AUD_Time](static/time/AUD_Time.cs) class and [AUD_ILocalTime](static/time/AUD_ILocalTime.cs) interface.  
+[AUD_Time]() holds the static reference used by [AUD_Fader]() which is a [AUD_ILocalTime]().
+
+The interface requires you to implement a method to retrieve the ScaledTicksMsec, and ScaledTicksUsec.
+
+### Very simple - No time scale implementation
+
+If you don't care about time scale at all, you can simply implement a static AUD_ILocalTime as such -
+```cs
+using Godot;
+
+public partial class AUD_NoTimeScale : Node, AUD_ILocalTime
+{
+    public ulong LocalScaledTicksMsec => Time.GetTicksMsec();
+    public ulong LocalScaledTicksUsec => Time.GetTicksUsec();
+
+    public override void _EnterTree()
+    {
+        AUD_Time.Instance = this;
+    }
+}
+```
+<small>Template provided in [static/time/templates/AUD_NoTimeScale.cs](static/time/templates/AUD_NoTimeScale.cs)</small>
+
+Then, you can set this script as an autoload in `Project Settings > Globals > Path (folder icon)`, and select the `AUD_NoTimeScale` script.
+
+### Simple - Use provided scale implementation
+
+I provided a simple implementation very close to what I actually use in my personnal project. The only difference is that my AUD_ILocalTime implementation actually holds a static instance itself, so I can use it without relying on the audio plugin.
+
+```cs
+using Godot;
+
+public partial class AUD_ExampleTime : Node, AUD_ILocalTime
+{
+    public ulong LocalScaledTicksMsec {get; private set;}
+    public ulong LocalScaledTicksUsec {get; private set;}
+
+    public override void _EnterTree() =>
+        AUD_Time.Instance = this;
+
+    public override void _Ready() =>
+        ProcessMode = ProcessModeEnum.Pausable;
+
+    public override void _PhysicsProcess(double delta)
+    {
+        double deltaMsec = delta * 1000;
+        LocalScaledTicksMsec += (ulong) deltaMsec;
+        LocalScaledTicksUsec += (ulong) deltaMsec * 1000;;
+    }
+}
+```
+<small>Template provided in [static/time/templates/AUD_TimeScale.cs](static/time/templates/AUD_TimeScale.cs)</small>
+
+Then, you can set this script as an autoload in `Project Settings > Globals > Path (folder icon)`, and select the `AUD_TimeScale` script.
+
+### Advanced - Implement your own `AUD_ILocalTime`
+
+You can also implement your own specification. For example, mine is a wrapper of my PHX_Time class.  
+
+The general idea is simple - implement AUD_ILocalTime, and make sure an instance of this implementation is set as the static `AUD_Time` instance reference before running, so typically using an auto-load with `_EnterTree` like in the examples provided before.
