@@ -9,11 +9,13 @@ public partial class AUD_Fader : AUD_Wrapper
     /// <summary>
     /// Time for the volume to reach _volume on start - in seconds.
     /// </summary>
-    [Export] private float _fadeInTime;
+    [Export(PropertyHint.Range, "0,5,exp,or_greater")]
+    private float _fadeInTime;
     /// <summary>
     /// Time for the volume to reach 0 on stop - in seconds.
     /// </summary>
-    [Export] private float _fadeOutTime;
+    [Export(PropertyHint.Range, "0,5,exp,or_greater")]
+    private float _fadeOutTime;
     /// <summary>
     /// Wether the sound this fader fades should start at muted or unmuted state.
     /// </summary>
@@ -34,6 +36,83 @@ public partial class AUD_Fader : AUD_Wrapper
     private float _currentTargetVolume;
     private bool _muting = true;
 
+    // +-----------------+
+    // |  CONFIGURATION  |
+    // +-----------------+
+    // ____________________
+    protected override void ModuleEnterTree()
+    {
+        InitSoundChild();
+
+        if (Engine.IsEditorHint())
+        {
+            SetPhysicsProcess(false);
+            return;
+        }
+
+        if (_sound == null)
+            return;
+        
+        _mutedVolumeDb = -80f - _sound.VolumeDb;
+
+        if (_startMuted)
+            _sound.RelativeVolumeDb = _mutedVolumeDb;
+        else
+            _sound.RelativeVolumeDb = VolumeDb;
+        SetPhysicsProcess(!_startMuted);
+    }
+    
+    private void InitSoundChild()
+    {
+        _sound = null;
+        foreach (Node node in GetChildren())
+            if (node is AUD_Sound sound)
+            {
+                _sound = sound;
+                return;
+            }
+    }
+
+    protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
+    {
+        if (sounds.Count == 0)
+            _sound = null;
+        else
+            _sound = sounds[0];
+    }
+    // +-------------------+
+    // |  CONFIG WARNINGS  |
+    // +-------------------+
+    // _____________________
+    public override string[] _GetConfigurationWarnings()
+    {
+        List<string> warnings = [];
+
+        if (_sound == null)
+            warnings.Add("This node has no attached Sound to fade.\nConsider adding an AUD_Sound as a child.");
+        if (TooManySounds())
+            warnings.Add("This node has multiple Sound children. It will only fade one of them.\nConsider using AUD_LayeredSound as a child to fade multiple sounds.");
+
+        return [.. warnings];
+    }
+
+    private bool TooManySounds()
+    {
+        bool found = false;
+        foreach (Node node in GetChildren())
+            if (node is AUD_Sound)
+                if (found)
+                    return true;
+                else
+                    found = true;
+
+        return false;
+    }
+
+    // +-------------------+
+    // |  MODULE BEHAVIOR  |
+    // +-------------------+
+    // _____________________
     private void SetFaderVolumeDb(float volumeDb)
     {
         if (_muting)
@@ -60,48 +139,6 @@ public partial class AUD_Fader : AUD_Wrapper
     {
         if (_sound == null) return;
         _sound.RelativePitchScale = BasePitchScale * pitchScale;
-    }
-
-    // Kinda dirty, but I'd rather still be able to use AutoPlay, so what the fader manipulates is as abstract as possible.
-    // Otherwise, we could simply disallow auto play, and call play on ready, but it already infers meaning to the wrapped AUD_Sound.
-    protected override void ModuleEnterTree()
-    {
-        InitSoundChild();
-
-        if (Engine.IsEditorHint())
-        {
-            SetPhysicsProcess(false);
-            return;
-        }
-
-        if (_sound == null)
-            return;
-        
-        _mutedVolumeDb = -80f - _sound.VolumeDb;
-
-        if (_startMuted)
-            _sound.RelativeVolumeDb = _mutedVolumeDb;
-        else
-            _sound.RelativeVolumeDb = VolumeDb;
-        SetPhysicsProcess(!_startMuted);
-    }
-    
-    private void InitSoundChild()
-    {
-        foreach (Node node in GetChildren())
-            if (node is AUD_Sound sound)
-            {
-                _sound = sound;
-                return;
-            }
-    }
-
-    protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
-    {
-        if (sounds.Count == 0)
-            _sound = null;
-        else
-            _sound = sounds[0];
     }
 
     /// <summary>
