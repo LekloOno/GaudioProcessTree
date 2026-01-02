@@ -170,7 +170,7 @@ public partial class AUD_Fader : AUD_Module
 
     private void InitFade()
     {
-        _fadeStart = PHX_Time.ScaledTicksMsec;
+        _fadeStart = AUD_Time.ScaledTicksMsec;
         _startVolume = VolumeDb;
         SetPhysicsProcess(true);
     }
@@ -181,7 +181,7 @@ public partial class AUD_Fader : AUD_Module
 
     private void Fade()
     {
-        float elapsed = (PHX_Time.ScaledTicksMsec - _fadeStart)/1000f;
+        float elapsed = (AUD_Time.ScaledTicksMsec - _fadeStart)/1000f;
 
         if (elapsed >= _currentFadeTime)
         {
@@ -192,7 +192,7 @@ public partial class AUD_Fader : AUD_Module
         }
 
         float elapsedScaled = elapsed/_currentFadeTime;
-        float lerped = MATH_Sound.LerpDB(_startVolume, _currentTargetVolume, elapsedScaled);
+        float lerped = AUD_Math.LerpDB(_startVolume, _currentTargetVolume, elapsedScaled);
         
         _sound.RelativeVolumeDb = lerped;
     }
