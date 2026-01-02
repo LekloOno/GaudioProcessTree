@@ -7,7 +7,7 @@ public partial class AUD_StreamPlayer2D : AUD_StreamPlayer
     [Export] private AudioStreamPlayer2D _player;
     public override AudioStream Stream
     {
-        get => _player == null ? null : _player.Stream;
+        get => _player?.Stream;
         set 
         {
             if (_player == null) return;
@@ -37,7 +37,7 @@ public partial class AUD_StreamPlayer2D : AUD_StreamPlayer
 
     public override StringName Bus
     {
-        get => _player == null ? null : _player.Bus;
+        get => _player?.Bus;
         set
         {
             if (_player == null) return;
