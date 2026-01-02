@@ -17,15 +17,21 @@ public abstract partial class AUD_Wrapper : AUD_Sound
         protected set => BasePitchScale = value / RelativePitchScale; 
     }
 
-    protected override void EnterTreeSpec() =>
-        ModuleEnterTree();
-    protected abstract void ModuleEnterTree();
-
-    public override void _ExitTree()
+    protected override sealed void EnterTreeSpec()
     {
-        if (!Engine.IsEditorHint())
-            return;
+        ModuleEnterTree();
+
+        if (Engine.IsEditorHint())
+            UpdateConfigurationWarnings();
     }
+
+    /// <summary>
+    /// Defines specialized behavior once the AUD_Sound _EnterTree routine has been executed, and before updating configuration warnings. <br/>
+    /// <br/>
+    /// This runs AFTER the main _EnterTree routine of AUD_Sound. SetBaseVolumeDb and SetBasePitchScale have already been called once.<br/>
+    /// Thus, it is very likely that base, relative and absolute volumeDb/PitchScale have already been initialized depending on their implementation.
+    /// </summary>
+    protected abstract void ModuleEnterTree();
 
     public override void _Notification(int what)
     {
