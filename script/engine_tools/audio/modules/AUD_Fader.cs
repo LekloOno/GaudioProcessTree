@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class AUD_Fader : AUD_Wrapper
+public partial class AUD_Fader : AUD_Module
 {
     private AUD_Sound _sound;
     /// <summary>

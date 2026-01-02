@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class AUD_LayeredSound : AUD_Wrapper
+public partial class AUD_LayeredSound : AUD_Module
 {
     private List<AUD_Sound> _layers;
 

@@ -3,7 +3,7 @@ using Godot;
 using Godot.Collections;
 
 [GlobalClass, Tool]
-public partial class AUD_RandomSound : AUD_Wrapper
+public partial class AUD_RandomSound : AUD_Module
 {
     protected AUD_StreamPlayer _player;
     protected Array<AudioStream> _sounds;

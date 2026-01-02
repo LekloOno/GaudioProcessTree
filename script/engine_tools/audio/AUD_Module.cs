@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 
 [GlobalClass, Tool]
-public abstract partial class AUD_Wrapper : AUD_Sound
+public abstract partial class AUD_Module : AUD_Sound
 {
     public override float VolumeDb
     {
