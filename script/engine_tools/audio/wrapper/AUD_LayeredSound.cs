@@ -1,16 +1,18 @@
 using System.Collections.Generic;
 using Godot;
-using Godot.Collections;
 
 [GlobalClass, Tool]
 public partial class AUD_LayeredSound : AUD_Wrapper
 {
-    record OriginalSettings(float VolumeDb, float PitchScale);
+    private List<AUD_Sound> _layers;
 
-    private List<AUD_Sound> _layers = [];
-
+    // +-----------------+
+    // |  CONFIGURATION  |
+    // +-----------------+
+    // ____________________
     protected override void ModuleEnterTree()
     {
+        _layers = [];
         foreach (Node node in GetChildren())
             if (node is AUD_Sound sound)
                 _layers.Add(sound);
@@ -18,7 +20,25 @@ public partial class AUD_LayeredSound : AUD_Wrapper
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds) =>
         _layers = sounds;
+    
+    // +-------------------+
+    // |  CONFIG WARNINGS  |
+    // +-------------------+
+    // _____________________
+    public override string[] _GetConfigurationWarnings()
+    {
+        List<string> warnings = [];
 
+        if (_layers == null || _layers.Count == 0)
+            warnings.Add("This node has no attached Sound to layer.\nConsider adding at least one AUD_Sound as a child.");
+
+        return [.. warnings];
+    }
+
+    // +-------------------+
+    // |  MODULE BEHAVIOR  |
+    // +-------------------+
+    // _____________________
     private void SetLayersVolumeDb(float volumeDb)
     {
         if (_layers == null)
