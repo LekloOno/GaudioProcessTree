@@ -7,7 +7,7 @@ public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
     
     public override AudioStream Stream
     {
-        get => _player == null ? null : Stream;
+        get => _player == null ? null : _player.Stream;
         set 
         {
             if (_player == null) return;
