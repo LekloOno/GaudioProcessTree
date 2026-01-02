@@ -5,11 +5,57 @@ using Godot;
 public partial class AUD_ParallelSound : AUD_RandomSound
 {
     record Voice(long Id, float RandomPitch);
-    [Export] private AudioStreamPolyphonic _polyphonicStream; 
-    [Export] private float _maxPolyphony = 5f;
+    private AudioStreamPolyphonic _polyphonicStream; 
+    [Export] public AudioStreamPolyphonic PolyphonicStream
+    {
+        get => _polyphonicStream;
+        set
+        {
+            _polyphonicStream = value;
+            if (Engine.IsEditorHint())
+                UpdateConfigurationWarnings();
+        }
+    }
+
+
+    private uint _maxPolyphony = 5;
+    [Export(PropertyHint.Range, "1,16,1,or_greater")]
+    public uint MaxPolyphony
+    {
+        get => _maxPolyphony;
+        set
+        {
+            _maxPolyphony = value;
+            if (Engine.IsEditorHint())
+                UpdateConfigurationWarnings();
+        }
+    }
+
     private AudioStreamPlaybackPolyphonic _playback;
     private readonly Queue<Voice> _voices = new();
 
+    // +-------------------+
+    // |  CONFIG WARNINGS  |
+    // +-------------------+
+    // _____________________
+    public override string[] _GetConfigurationWarnings()
+    {
+        List<string> warnings = [.. base._GetConfigurationWarnings()];
+        
+        if (_polyphonicStream == null)
+            warnings.Add("AudioStreamPolyphonic must be provided for this node to function.\nPlease provide one as Polyphonic Stream property.");
+        else if (_polyphonicStream.Polyphony <= _maxPolyphony)
+            warnings.Add("Unsufficient number of polyphone streams.\n"
++ "The number of polyphony streams available (" + _polyphonicStream.Polyphony + ") on the provided AudioStreamPolyphonic isn't sufficient to match expected Max Polyphony (" + _maxPolyphony + ").\n"
++ "Consider increasing the value of PolyphonicStream.Polyphony, or decreasing Max Polyphony.");
+
+        return [.. warnings];
+    }
+
+    // +-------------------+
+    // |  MODULE BEHAVIOR  |
+    // +-------------------+
+    // _____________________
     private float AbsolutePitch(float randomPitch, float parallelPitch) =>
         randomPitch * parallelPitch * _player.PitchScale;
 
