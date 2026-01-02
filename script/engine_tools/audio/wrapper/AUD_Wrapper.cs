@@ -45,8 +45,7 @@ public abstract partial class AUD_Wrapper : AUD_Sound
 
         OnSoundChildChanged(children);
 
-        if (Engine.IsEditorHint())
-            UpdateConfigurationWarnings();
+        UpdateConfigurationWarnings();
     }
 
     /// <summary>

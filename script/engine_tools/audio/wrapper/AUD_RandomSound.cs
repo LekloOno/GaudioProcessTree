@@ -13,8 +13,7 @@ public partial class AUD_RandomSound : AUD_Wrapper
         protected set
         {
             _sounds = value;
-            if (Engine.IsEditorHint())
-                UpdateConfigurationWarnings();
+            UpdateConfigurationWarnings();
         }
     }
 

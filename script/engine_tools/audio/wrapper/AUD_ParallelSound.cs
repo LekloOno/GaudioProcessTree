@@ -12,8 +12,7 @@ public partial class AUD_ParallelSound : AUD_RandomSound
         set
         {
             _polyphonicStream = value;
-            if (Engine.IsEditorHint())
-                UpdateConfigurationWarnings();
+            UpdateConfigurationWarnings();
         }
     }
 
@@ -26,8 +25,7 @@ public partial class AUD_ParallelSound : AUD_RandomSound
         set
         {
             _maxPolyphony = value;
-            if (Engine.IsEditorHint())
-                UpdateConfigurationWarnings();
+            UpdateConfigurationWarnings();
         }
     }
 
