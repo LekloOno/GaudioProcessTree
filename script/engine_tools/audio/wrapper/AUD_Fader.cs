@@ -131,7 +131,7 @@ public partial class AUD_Fader : AUD_Wrapper
     private void InitFade()
     {
         _fadeStart = PHX_Time.ScaledTicksMsec;
-        _startVolume = _sound.VolumeDb;
+        _startVolume = VolumeDb;
         SetPhysicsProcess(true);
     }
 
