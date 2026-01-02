@@ -42,7 +42,7 @@ public partial class AUD_ParallelSound : AUD_RandomSound
     public override void Play()
     {
         AudioStream stream = _sounds.PickRandom();
-        float randomPitch = (float)GD.RandRange(_minPitch, _maxPitch);
+        float randomPitch = (float)GD.RandRange(MinPitch, MaxPitch);
 
         if (_voices.Count >= _maxPolyphony)
         {
