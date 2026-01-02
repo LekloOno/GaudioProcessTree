@@ -23,7 +23,7 @@ public partial class AUD_RandomSound : AUD_Wrapper
     protected float MinPitch
     {
         get => _minPitch;
-        set => _minPitch = Mathf.Clamp(value, 0.001f, _maxPitch);
+        set => _minPitch = Mathf.Clamp(value, MIN_PITCH, _maxPitch);
     }
     
     private float _maxPitch = 1f;

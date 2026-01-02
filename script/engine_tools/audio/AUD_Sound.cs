@@ -1,17 +1,10 @@
-using System;
 using Godot;
 
 [GlobalClass, Tool]
 public abstract partial class AUD_Sound : Node, AUD_ISound
 {
-    /// <summary>
-    /// Not editable in run time for now.
-    /// </summary>
+    protected const float MIN_PITCH = 0.001f;
     private float _baseVolumeDb = 0f;
-    
-    /// <summary>
-    /// Not editable in run time for now.
-    /// </summary>
     private float _basePitchScale = 1f;
     protected float _relativeVolumeDb = 0f;
     protected float _relativePitchScale = 1f;
@@ -28,9 +21,16 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
         EnterTreeSpec();
     }
 
+    /// <summary>
+    /// Defines specialized behavior once the AUD_Sound _EnterTree routine has been executed. <br/>
+    /// <br/>
+    /// This runs AFTER the main _EnterTree routine of AUD_Sound. SetBaseVolumeDb and SetBasePitchScale have already been called once.<br/>
+    /// Thus, it is very likely that base, relative and absolute volumeDb/PitchScale have already been initialized depending on their implementation.
+    /// </summary>
     protected virtual void EnterTreeSpec(){}
 
-    [Export] public float BaseVolumeDb
+    [Export(PropertyHint.Range, "-80,20,0.1,or_greater,or_less")]
+    public float BaseVolumeDb
     {
         get => _baseVolumeDb;
         protected set
@@ -49,13 +49,15 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     /// <param name="volumeDb">The value BaseVolumeDb will be set at after the operation.</param>
     protected abstract void SetBaseVolumeDb(float volumeDb);
 
-    [Export] public float BasePitchScale
+    
+    [Export(PropertyHint.Range, "0.1,5,exp,or_greater,or_less")]
+    public float BasePitchScale
     {
         get => _basePitchScale;
         protected set
         {
             SetBasePitchScale(value);
-            _basePitchScale = value;
+            _basePitchScale = Mathf.Max(value, MIN_PITCH);
         }
     }
     /// <summary>
