@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 [GlobalClass, Tool]
@@ -47,6 +48,16 @@ public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
 
     public override AudioStreamPlayback GetStreamPlayBack() =>
         _player.GetStreamPlayback();
+
+    public override string[] _GetConfigurationWarnings()
+    {
+        List<string> warnings = [];
+
+        if (_player == null)
+            warnings.Add("This node has no attached AudioStreamPlayer.\nConsider assigning one in the inspector.");
+
+        return [.. warnings];
+    }
 
     public override void Play() => _player.Play();
     public override void Stop() => _player.Stop();
