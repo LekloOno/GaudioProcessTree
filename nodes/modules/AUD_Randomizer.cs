@@ -11,16 +11,25 @@ using Godot.Collections;
 [GlobalClass, Tool]
 public partial class AUD_Randomizer : AUD_Module
 {
-    protected AUD_StreamPlayer _player;
+    private AUD_StreamPlayer _player;
+    public AUD_StreamPlayer Player
+    {
+        get => _player;
+        private set
+        {
+            if (_player != null)
+                _player.Finished -= ForwardFinished;
+
+            _player = value;
+            _player.Finished += ForwardFinished;
+        }
+    }
+
     protected Array<AudioStream> _sounds;
     /// <summary>
     /// On AUD_Randomizer, Finished fires whenever its player has completed playing.
     /// </summary>
-    public override event Action Finished
-    {
-        add => _player.Finished += value;
-        remove => _player.Finished -= value;   
-    }
+    public override event Action Finished;
 
     [Export] public Array<AudioStream> Sounds
     {
@@ -155,4 +164,10 @@ public partial class AUD_Randomizer : AUD_Module
     }
 
     public override void Stop() => _player.Stop();
+
+    /// <summary>
+    /// Used by implementing class to forward Finished event.
+    /// </summary>
+    protected void ForwardFinished() =>
+        Finished?.Invoke();
 }

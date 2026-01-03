@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -14,7 +15,31 @@ using Godot;
 [GlobalClass, Tool]
 public partial class AUD_Parallelizer : AUD_Randomizer
 {
-    record Voice(long Id, float RandomPitch);
+    readonly struct Voice()
+    {
+        public long Id { get; }
+        public float RandomPitch { get; }
+        public double Length { get; }
+
+        public Voice(long id, float randomPitch, double length) : this()
+        {
+            Id = id;
+            RandomPitch = randomPitch;
+            Length = length;
+        }
+    }
+
+    record VoiceTracker(Voice Voice)
+    {
+        public double Lifetime {get; set;} = Voice.Length;
+        public long Id => Voice.Id;
+        public float RandomPitch => Voice.RandomPitch;
+        public double Length => Voice.Length;
+
+        public VoiceTracker(long id, float randomPitch, double length)
+            : this(new Voice(id, randomPitch, length)) {}
+    }
+
     private AudioStreamPolyphonic _polyphonicStream; 
     [Export] public AudioStreamPolyphonic PolyphonicStream
     {
@@ -40,7 +65,8 @@ public partial class AUD_Parallelizer : AUD_Randomizer
     }
 
     private AudioStreamPlaybackPolyphonic _playback;
-    private readonly Queue<Voice> _voices = new();
+    private readonly LinkedList<VoiceTracker> _voices = new();
+    private int _activeVoices = 0;
 
     // +-------------------+
     // |  CONFIG WARNINGS  |
@@ -65,14 +91,14 @@ public partial class AUD_Parallelizer : AUD_Randomizer
     // +-------------------+
     // _____________________
     private float AbsolutePitch(float randomPitch, float parallelPitch) =>
-        randomPitch * parallelPitch * _player.PitchScale;
+        randomPitch * parallelPitch * Player.PitchScale;
 
     private void SetParallelPitchScale(float pitchScale)
     {
-        foreach (Voice voice in _voices)
+        foreach (VoiceTracker tracker in _voices)
         {
-            float voicePitch = AbsolutePitch(voice.RandomPitch, pitchScale);
-            _playback.SetStreamPitchScale(voice.Id, voicePitch);
+            float voicePitch = AbsolutePitch(tracker.Voice.RandomPitch, pitchScale);
+            _playback.SetStreamPitchScale(tracker.Voice.Id, voicePitch);
         }
     }
 
@@ -85,12 +111,65 @@ public partial class AUD_Parallelizer : AUD_Randomizer
 
     public override void _Ready()
     {
+        SetPhysicsProcess(!Engine.IsEditorHint());
+
         if (Engine.IsEditorHint())
             return;
             
-        _player.Stream = _polyphonicStream;
-        _player.Play();
-        _playback = _player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
+        Player.Stream = _polyphonicStream;
+        Player.Play();
+        _playback = Player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        LinkedListNode<VoiceTracker> tracker = _voices.First;
+        while (tracker != null)
+        {
+            LinkedListNode<VoiceTracker> next = tracker.Next;
+            if (Cycle(tracker.Value, delta))
+                RemoveTracker(tracker);
+            tracker = next;
+        }
+    }
+
+    private bool Cycle(VoiceTracker tracker, double delta)
+    {
+        tracker.Lifetime -= delta * AbsolutePitch(tracker.RandomPitch, PitchScale);
+        return tracker.Lifetime <= 0;
+    }
+
+    public void EnqueueVoice(AudioStream stream, float randomPitch)
+    {
+        float pitchScale = AbsolutePitch(randomPitch, PitchScale);
+
+        long newVoice = _playback.PlayStream(stream, 0, 0, pitchScale);
+        double length = stream.GetLength();
+
+        _voices.AddLast(new VoiceTracker(newVoice, randomPitch, length));
+
+        _activeVoices ++;
+    }
+
+    private void RemoveVoice(long id)
+    {
+        _playback.SetStreamVolume(id, -80f);
+        _playback.StopStream(id);
+        if (-- _activeVoices == 0)
+            ForwardFinished();
+    }
+
+    private void RemoveTracker(LinkedListNode<VoiceTracker> tracker)
+    {
+        _voices.Remove(tracker);
+        RemoveVoice(tracker.Value.Id);
+    }
+
+    private void DequeueVoice()
+    {
+        long oldestVoice = _voices.First.Value.Id;
+        _voices.RemoveFirst();
+        RemoveVoice(oldestVoice);
     }
 
     public override void Play()
@@ -99,17 +178,8 @@ public partial class AUD_Parallelizer : AUD_Randomizer
         float randomPitch = (float)GD.RandRange(MinPitch, MaxPitch);
 
         if (_voices.Count >= _maxPolyphony)
-        {
-            long oldestVoice = _voices.Dequeue().Id;
-            _playback.SetStreamVolume(oldestVoice, -80f);
-            _playback.StopStream(oldestVoice);
-        }
-
-        float pitchScale = AbsolutePitch(randomPitch, PitchScale);
-        long newVoice = _playback.PlayStream(stream, 0, 0, pitchScale);
-        _voices.Enqueue(new(newVoice, randomPitch));
+            DequeueVoice();
+        
+        EnqueueVoice(stream, randomPitch);
     }
-
-    public override void Stop() =>
-        _player.Stop();
 }
