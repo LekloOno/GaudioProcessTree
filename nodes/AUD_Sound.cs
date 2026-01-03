@@ -19,9 +19,15 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
 
     public abstract void Play();
     public abstract void Stop();
-    public abstract event Action Finished;
     public abstract float VolumeDb {get; protected set;}
     public abstract float PitchScale {get; protected set;}
+
+    public event Action Finished;
+    /// <summary>
+    /// Used by implementing class to forward Finished event. <br/>
+    /// </summary>
+    protected void ForwardFinished() =>
+        Finished?.Invoke();
 
     public sealed override void _EnterTree()
     {

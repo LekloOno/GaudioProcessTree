@@ -8,6 +8,11 @@ using Godot.Collections;
 /// It does not play a random AUD_Sound ! Its child must be an AUD_StreamPlayer. <br/>
 /// Otherwize, that would imply the use of many distinct players for such a common pattern.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <see cref="Finished"/> is a direct forward of its player Finished event.
+/// </para>
+/// </remarks>
 [GlobalClass, Tool]
 public partial class AUD_Randomizer : AUD_Module
 {
@@ -26,10 +31,6 @@ public partial class AUD_Randomizer : AUD_Module
     }
 
     protected Array<AudioStream> _sounds;
-    /// <summary>
-    /// On AUD_Randomizer, Finished fires whenever its player has completed playing.
-    /// </summary>
-    public override event Action Finished;
 
     [Export] public Array<AudioStream> Sounds
     {
@@ -164,10 +165,4 @@ public partial class AUD_Randomizer : AUD_Module
     }
 
     public override void Stop() => _player.Stop();
-
-    /// <summary>
-    /// Used by implementing class to forward Finished event.
-    /// </summary>
-    protected void ForwardFinished() =>
-        Finished?.Invoke();
 }

@@ -9,7 +9,7 @@ public interface AUD_ISound
     void Stop();
     /// <summary>
     /// Fired whenever the sound completed playing. <br/>
-    /// It could be simply fired whenever Stop() is called, or after some more specific processing, like once a stream finishes playing, or once a fader has completely faded out.
+    /// The precise completion semantics are defined by derived types.
     /// </summary>
     event Action Finished;
     /// <summary>

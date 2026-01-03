@@ -5,19 +5,15 @@ using Godot;
 /// <summary>
 /// Plays and control multiple children sound as one.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <see cref="Finished"/> fires once every sound layer have themselves Finished.
+/// </para>
+/// </remarks>
 [GlobalClass, Tool]
 public partial class AUD_Layerer : AUD_Module
 {
     protected LinkedList<AUD_Sound> _layers;
-    /// <summary>
-    /// On AUD_Layerer, Finished fires when all the layered sounds have themselves Finished.
-    /// </summary>
-    public override event Action Finished;
-    /// <summary>
-    /// Used by implementing class to forward Finished event.
-    /// </summary>
-    protected void ForwardFinished() =>
-        Finished?.Invoke();
     protected int _playingSounds = 0;
 
     // +-----------------+
@@ -135,6 +131,6 @@ public partial class AUD_Layerer : AUD_Module
     private void TrackLayerLifetime()
     {
         if (-- _playingSounds == 0)
-            Finished?.Invoke();
+            ForwardFinished();
     }
 }

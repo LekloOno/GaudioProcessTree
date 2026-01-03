@@ -12,6 +12,11 @@ using Godot;
 /// Setting the Stream of an AudioStreamPlayer stops all its currently playing sounds. AUD_RandomSound would suffer from this in cases where we need to repeatedly play. <br/>
 /// AUD_ParallelSound is thus also relevant if avoiding this issue is necessary.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <see cref="Finished"/> fires once every stream channel has stopped.
+/// </para>
+/// </remarks>
 [GlobalClass, Tool]
 public partial class AUD_Parallelizer : AUD_Randomizer
 {

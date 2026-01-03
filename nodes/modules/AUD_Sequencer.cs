@@ -5,6 +5,11 @@ using Godot;
 /// Instead of playing all the layers together, the sequencer waits for each child to finish playing to play the next one. <br/>
 /// The children order in tree is the order in which the sounds will be played.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <see cref="Finished"/> fires once the whole sequence has completed playing, that is, its last children has fired Finished.
+/// </para>
+/// </remarks>
 [GlobalClass, Tool]
 public partial class AUD_Sequencer : AUD_Layerer
 {
