@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -7,7 +8,20 @@ using Godot;
 [GlobalClass, Tool]
 public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
 {
-    [Export] private AudioStreamPlayer _player;
+    private AudioStreamPlayer _player;
+    [Export] public AudioStreamPlayer Player
+    {
+        get => _player;
+        private set
+        {
+            if (_player != null)
+                _player.Finished -= ForwardFinished;
+
+            _player = value;
+            _player.Finished += ForwardFinished;
+            UpdateConfigurationWarnings();
+        }
+    }
     
     public override AudioStream Stream
     {
@@ -63,5 +77,5 @@ public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
     }
 
     public override void Play() => _player.Play();
-    public override void Stop() => _player.Stop();
+    protected override void StopPlayer() => _player.Stop();
 }
