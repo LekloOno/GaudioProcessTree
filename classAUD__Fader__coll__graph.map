@@ -1,0 +1,12 @@
+<map id="AUD_Fader" name="AUD_Fader">
+<area shape="rect" id="Node000001" title="Fades in and out the VolumeDb of a child AUD_Sound by respectively calling Play() and Stop()." alt="" coords="39,229,132,255"/>
+<area shape="rect" id="Node000002" href="$classAUD__Module.html" title="A sound module is a non&#45;leaf node in an AUD_Sound processing tree. &#160;&#160;It encapsulates one or multiple ..." alt="" coords="144,155,251,180"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,190,105,231,102,227,167,185"/>
+<area shape="rect" id="Node000003" href="$classAUD__Sound.html" title="The AUD_Sound class defines the base abstraction and implementation of AUD_ISound sound processing tr..." alt="" coords="36,80,135,105"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="86,119,84,155,87,229,82,229,79,155,81,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,111,181,152,178,157,113,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,61,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="52,41,79,78,75,81,48,44"/>
+<area shape="rect" id="Node000005" href="$interfaceAUD__ISound.html" title="The AUD_ISound interface defines the specification of generic sound processing tree nodes." alt="" coords="86,5,189,31"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="123,44,96,81,92,78,119,41"/>
+</map>

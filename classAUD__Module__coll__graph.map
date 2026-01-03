@@ -1,0 +1,9 @@
+<map id="AUD_Module" name="AUD_Module">
+<area shape="rect" id="Node000001" title="A sound module is a non&#45;leaf node in an AUD_Sound processing tree. &#160;&#160;It encapsulates one or multiple ..." alt="" coords="32,152,139,177"/>
+<area shape="rect" id="Node000002" href="$classAUD__Sound.html" title="The AUD_Sound class defines the base abstraction and implementation of AUD_ISound sound processing tr..." alt="" coords="36,79,135,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,118,88,152,83,152,83,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,61,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="52,40,79,77,75,80,48,43"/>
+<area shape="rect" id="Node000004" href="$interfaceAUD__ISound.html" title="The AUD_ISound interface defines the specification of generic sound processing tree nodes." alt="" coords="86,5,189,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="123,43,96,80,92,77,119,40"/>
+</map>

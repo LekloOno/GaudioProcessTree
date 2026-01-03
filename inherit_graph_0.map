@@ -1,0 +1,32 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$interfaceAUD__ILocalTime.html" title=" " alt="" coords="5,55,135,80"/>
+<area shape="rect" id="Node000001" href="$classAUD__ExampleTime.html" title=" " alt="" coords="183,104,331,129"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="132,81,208,101,207,106,131,86"/>
+<area shape="rect" id="Node000003" href="$classAUD__NoTimeScale.html" title=" " alt="" coords="185,55,329,80"/>
+<area shape="poly" id="edge2_Node000000_Node000003" title=" " alt="" coords="149,65,184,65,184,70,149,70"/>
+<area shape="rect" id="Node000014" href="$interfaceAUD__ISound.html" title="The AUD_ISound interface defines the specification of generic sound processing tree nodes." alt="" coords="19,153,121,179"/>
+<area shape="rect" id="Node000004" href="$classAUD__Sound.html" title="The AUD_Sound class defines the base abstraction and implementation of AUD_ISound sound processing tr..." alt="" coords="207,153,306,179"/>
+<area shape="poly" id="edge3_Node000014_Node000004" title=" " alt="" coords="135,163,207,163,207,169,135,169"/>
+<area shape="rect" id="Node000005" href="$classAUD__Module.html" title="A sound module is a non&#45;leaf node in an AUD_Sound processing tree. &#160;&#160;It encapsulates one or multiple ..." alt="" coords="399,80,505,105"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="310,147,330,140,420,103,422,108,332,144,312,152"/>
+<area shape="rect" id="Node000010" href="$classAUD__StreamPlayer.html" title="A Stream Player is a leaf node in an AUD_Sound processing tree. &#160;&#160;It binds the tree branch to a concr..." alt="" coords="379,177,525,203"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="320,171,379,178,378,184,319,176"/>
+<area shape="rect" id="Node000006" href="$classAUD__Fader.html" title="Fades in and out the VolumeDb of a child AUD_Sound by respectively calling Play() and Stop()." alt="" coords="609,5,702,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="494,72,572,41,610,28,612,33,574,46,496,77"/>
+<area shape="rect" id="Node000007" href="$classAUD__LayeredSound.html" title="Plays and control multiple children sound as one." alt="" coords="580,55,731,80"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="519,82,579,74,580,79,520,87"/>
+<area shape="rect" id="Node000008" href="$classAUD__RandomSound.html" title="Plays a random sound on a given player, with pitchScale randomization. &#160;&#160;It does not play a random AU..." alt="" coords="579,104,731,129"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="519,98,579,105,579,110,519,103"/>
+<area shape="rect" id="Node000009" href="$classAUD__ParallelSound.html" title="Specialization of AUD_RandomSound that runs each new stream Play on a parallel channel...." alt="" coords="785,104,932,129"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="745,114,785,114,785,119,745,119"/>
+<area shape="rect" id="Node000011" href="$classAUD__StreamPlayer1D.html" title="AUD_StreamPlayer implementation for Godot&#39;s AudioStreamPlayer." alt="" coords="573,153,737,179"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="539,177,573,173,573,178,540,182"/>
+<area shape="rect" id="Node000012" href="$classAUD__StreamPlayer2D.html" title="AUD_StreamPlayer implementation for Godot&#39;s AudioStreamPlayer2D." alt="" coords="573,203,737,228"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="540,198,573,202,573,208,539,204"/>
+<area shape="rect" id="Node000013" href="$classAUD__StreamPlayer3D.html" title="AUD_StreamPlayer implementation for Godot&#39;s AudioStreamPlayer3D." alt="" coords="573,252,737,277"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="495,206,574,238,609,249,607,254,572,243,493,211"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,104,98,129"/>
+<area shape="poly" id="edge13_Node000002_Node000001" title=" " alt="" coords="112,114,182,114,182,119,112,119"/>
+<area shape="poly" id="edge14_Node000002_Node000003" title=" " alt="" coords="110,103,207,77,209,83,112,109"/>
+<area shape="poly" id="edge15_Node000002_Node000004" title=" " alt="" coords="112,125,209,151,207,156,110,130"/>
+</map>
