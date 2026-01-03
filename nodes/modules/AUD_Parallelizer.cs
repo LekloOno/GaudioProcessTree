@@ -12,7 +12,7 @@ using Godot;
 /// AUD_ParallelSound is thus also relevant if avoiding this issue is necessary.
 /// </summary>
 [GlobalClass, Tool]
-public partial class AUD_ParallelSound : AUD_RandomSound
+public partial class AUD_Parallelizer : AUD_Randomizer
 {
     record Voice(long Id, float RandomPitch);
     private AudioStreamPolyphonic _polyphonicStream; 

@@ -5,7 +5,7 @@ using Godot;
 /// Plays and control multiple children sound as one.
 /// </summary>
 [GlobalClass, Tool]
-public partial class AUD_LayeredSound : AUD_Module
+public partial class AUD_Layerer : AUD_Module
 {
     private List<AUD_Sound> _layers;
 

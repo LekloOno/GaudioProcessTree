@@ -8,7 +8,7 @@ using Godot.Collections;
 /// Otherwize, that would imply the use of many distinct players for such a common pattern.
 /// </summary>
 [GlobalClass, Tool]
-public partial class AUD_RandomSound : AUD_Module
+public partial class AUD_Randomizer : AUD_Module
 {
     protected AUD_StreamPlayer _player;
     protected Array<AudioStream> _sounds;
