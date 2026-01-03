@@ -1,3 +1,7 @@
+/// <summary>
+/// A static tool to abstract the way of retrieving time passed in Msec/Usec. <br/>
+/// It can notably enable the use of custom logic to handle time-scale and pauses.
+/// </summary>
 public static class AUD_Time
 {
     public static AUD_ILocalTime Instance {get; set;}

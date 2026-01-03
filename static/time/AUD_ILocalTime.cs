@@ -1,5 +1,8 @@
 using Godot;
 
+/// <summary>
+/// Base interface to define an instance of time manager.
+/// </summary>
 public interface AUD_ILocalTime
 {
     /// <summary>
