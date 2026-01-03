@@ -91,6 +91,7 @@ That is, a `RelativeVolumeDb` of 0 and `RelativePitchScale` of 1 respectively gi
 - [AUD_Parallelizer](nodes/modules/AUD_ParallelSound.cs) running streams in parallel
 - [AUD_Fader](nodes/modules/AUD_Fader.cs) - fading sounds in and out.
 - [AUD_Sequencer](nodes/modules/AUD_Sequencer.cs) - plays sounds in sequences, that is, each child of this module will play after the previous one has finished playing.
+- [AUD_Delayer](nodes/modules/AUD_Delayer.cs) - plays a sound with the specified delay.
 
 ## AUD_StreamPlayer
 
