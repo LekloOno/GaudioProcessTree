@@ -2,6 +2,38 @@ This plugin provides a way to describe audio processing in a tree-like structure
 
 It has been built as part of my engine extensions in an unrelated Godot project. Thus, the commit history might be quite inconsistent as it is an abrupt git filter-repo of the original project, that included undirectly related commits to this work that might have been scrapped in the process.
 
+- [Getting started](#getting-started)
+- [Important note on dependency](#important-note-on-dependency)
+- [General Idea](#general-idea)
+  - [AUD\_Sound common concept](#aud_sound-common-concept)
+  - [AUD\_Module](#aud_module)
+  - [AUD\_StreamPlayer](#aud_streamplayer)
+- [Editor integration](#editor-integration)
+- [AUD\_Time dependency](#aud_time-dependency)
+  - [Simplest - Delete/Modifying AUD\_Fader](#simplest---deletemodifying-aud_fader)
+    - [Delete](#delete)
+    - [Modify](#modify)
+  - [Enable AUD\_Fader via AUD\_Time](#enable-aud_fader-via-aud_time)
+    - [Very simple - No time scale implementation](#very-simple---no-time-scale-implementation)
+    - [Simple - Use provided scale implementation](#simple---use-provided-scale-implementation)
+    - [Advanced - Implement your own `AUD_ILocalTime`](#advanced---implement-your-own-aud_ilocaltime)
+      - [Example case for a completely modular approach](#example-case-for-a-completely-modular-approach)
+
+
+# Getting started
+
+To get started, you can either download the project, or execute the following command in your project's addons directory.
+```sh
+git clone git@github.com:LekloOno/GaudioProcessTree.git
+```
+
+You can then start building your processing tree using the different `AUD_Sound` nodes.  
+All `AUD_Sound` tree branches should terminate with an `AUD_StreamPlayer` leaf node (which itself is an `AUD_Sound`). More on than in [AUD_StreamPlayer](#aud_streamplayer)'s section.
+
+Note that the provided `AUD_Fader` module requires one extra configuration to be used, see [note on dependency](#important-note-on-dependency) and [dependency](#aud_time-dependency) sections.
+
+The plugin is fully commented, and you can read a condensed introduction of the main concepts in the [General idea](#general-idea) section.
+
 # Important note on dependency
 
 The plugin is almost entirely standalone, but the provided module [AUD_Fader](nodes/modules/AUD_Fader.cs) depends on another tool I made internally, that is not specific to audio, thus not included in this plugin.
