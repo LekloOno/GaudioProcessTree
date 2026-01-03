@@ -14,8 +14,8 @@ RECURSIVE              = YES
 
 # Language
 OPTIMIZE_OUTPUT_FOR_CSHARP = YES
-HIDE_SCOPE_NAMES = YES
-FULL_PATH_NAMES = NO
+HIDE_SCOPE_NAMES 	= YES
+FULL_PATH_NAMES 	= NO
 
 # Extract comments
 EXTRACT_ALL            = YES
@@ -34,11 +34,12 @@ HTML_OUTPUT            = html
 GENERATE_TREEVIEW      = YES
 SEPARATE_MEMBER_PAGES  = YES
 ALWAYS_DETAILED_SEC    = YES
-OPTIMIZE_OUTPUT_FOR_CSHARP = YES
 
 # Optional class diagrams
 HAVE_DOT               = YES
-CLASS_DIAGRAMS         = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+DOT_IMAGE_FORMAT       = svg
 
 # Style
-HTML_EXTRA_STYLESHEET = doxygen-awesome/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = doxygen-awesome/doxygen-awesome.css
