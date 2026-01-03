@@ -1,5 +1,23 @@
-[![Documentation](https://img.shields.io/badge/docs-GaudioProcessTree-blue)](https://lekloono.github.io/GaudioProcessTree/)
-
+[![Documentation](https://img.shields.io/badge/docs-GaudioProcessTree-blue)](https://lekloono.github.io/GaudioProcessTree/)  
+- [Getting started](#getting-started)
+- [Important note on dependency](#important-note-on-dependency)
+- [General Idea](#general-idea)
+  - [AUD\_Sound common concept](#aud_sound-common-concept)
+  - [AUD\_Module](#aud_module)
+  - [AUD\_StreamPlayer](#aud_streamplayer)
+  - [Example Tutorial](#example-tutorial)
+- [Editor integration](#editor-integration)
+- [AUD\_Time dependency](#aud_time-dependency)
+  - [Simplest - Delete/Modifying AUD\_Fader](#simplest---deletemodifying-aud_fader)
+    - [Delete](#delete)
+    - [Modify](#modify)
+  - [Enable AUD\_Fader via AUD\_Time](#enable-aud_fader-via-aud_time)
+    - [Very simple - No time scale implementation](#very-simple---no-time-scale-implementation)
+    - [Simple - Use provided scale implementation](#simple---use-provided-scale-implementation)
+    - [Advanced - Implement your own `AUD_ILocalTime`](#advanced---implement-your-own-aud_ilocaltime)
+      - [Example case for a completely modular approach](#example-case-for-a-completely-modular-approach)
+- [Full documentation](#full-documentation)
+___
 This plugin provides a way to describe audio processing in a tree-like structure, with various common tools and spatial abstraction to Godot AudioStreamPlayer.
 
 It has been built as part of my engine extensions in an unrelated Godot project. Thus, the commit history might be quite inconsistent as it is an abrupt git filter-repo of the original project, that included undirectly related commits to this work that might have been scrapped in the process.
@@ -10,6 +28,7 @@ It has been built as part of my engine extensions in an unrelated Godot project.
   - [AUD\_Sound common concept](#aud_sound-common-concept)
   - [AUD\_Module](#aud_module)
   - [AUD\_StreamPlayer](#aud_streamplayer)
+  - [Example Tutorial](#example-tutorial)
 - [Editor integration](#editor-integration)
 - [AUD\_Time dependency](#aud_time-dependency)
   - [Simplest - Delete/Modifying AUD\_Fader](#simplest---deletemodifying-aud_fader)
@@ -79,6 +98,38 @@ That is, a `RelativeVolumeDb` of 0 and `RelativePitchScale` of 1 respectively gi
 
 They wrap Godot's AudioStreamPlayer in a generic way.  
 That is, AUD_Sound trees are compatible with any kind of AudioStreamPlayer, no matter if it is 2D, 3D, or non dimensional. This can enable some added flexibility, especially at prototyping phase when you are unsure of what exact player to use.
+
+## Example Tutorial
+
+Let's imagine we want to add sound to a gun. A rapid fire gun sound could be decomposed in three main parts -
+- An attack sound - the initial burst impact sound that gives kick to the gun.
+- A hold sound - your iconic BRRRT that plays when you hold fire.
+- A tail sound - some tail reverb for the hold, some cartridges falling, etc.
+
+Usually, you would thus glue your gun to these 3 different possible events. With GaudioProcessTree, you can instead build a fully independant tree, and only glue the root of the tree to your gun, so that it just "play and stop playing a sound", it doesn't have to know about all these specific steps anymore.
+
+Such tree would look like this -  
+![gun example](_doc_res/gun_example.png)
+
+- The layerer plays both the impact sound and "sequencer" together.  
+- The sequencer first plays the hold fader which fades in the brrt sound, then plays the tail sound when the fader starts fading out.   
+
+The only thing we need to do now is call Play and Stop on the root node.
+
+Let's add some sugar coating - maybe we want to pick random sounds with random pitch scales for the impact and tail sound, so it does not get too repetitive.  
+We can just embed these two in a `AUD_Randomizer` or `AUD_Parallelizer` !
+
+![parallelizer](_doc_res/parallelizer.png)
+
+And set it up -
+
+![parallelizer settings](_doc_res/parallelizer_settings.png)
+
+Maybe we want to go one step further, and layer the impact sound as multiple randomized sounds !
+
+![alt text](_doc_res/layerer.png)
+
+You've probably got the idea at this point. Have fun !
 
 # Editor integration
 
