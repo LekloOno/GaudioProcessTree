@@ -67,10 +67,11 @@ That is, a `RelativeVolumeDb` of 0 and `RelativePitchScale` of 1 respectively gi
 ## AUD_Module
 
 [Modules](nodes/modules/) are non-leaf nodes, that can parent other modules or stream players. They are various modules for various processing operations. Currently implemented are
-- [AUD_LayeredSound](nodes/modules/AUD_LayeredSound.cs) - layering multiple sounds.
-- [AUD_RandomSound](nodes/modules/AUD_RandomSound.cs) - randomizing sound picking and pitch.
-- [AUD_ParallelSound](nodes/modules/AUD_ParallelSound.cs) running streams in parallel
+- [AUD_Layerer](nodes/modules/AUD_LayeredSound.cs) - layering multiple sounds.
+- [AUD_Randomizer](nodes/modules/AUD_RandomSound.cs) - randomizing sound picking and pitch.
+- [AUD_Parallelizer](nodes/modules/AUD_ParallelSound.cs) running streams in parallel
 - [AUD_Fader](nodes/modules/AUD_Fader.cs) - fading sounds in and out.
+- [AUD_Sequencer](nodes/modules/AUD_Sequencer.cs) - plays sounds in sequences, that is, each child of this module will play after the previous one has finished playing.
 
 ## AUD_StreamPlayer
 
