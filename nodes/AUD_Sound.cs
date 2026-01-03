@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 /// <summary>
@@ -18,6 +19,7 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
 
     public abstract void Play();
     public abstract void Stop();
+    public abstract event Action Finished;
     public abstract float VolumeDb {get; protected set;}
     public abstract float PitchScale {get; protected set;}
 

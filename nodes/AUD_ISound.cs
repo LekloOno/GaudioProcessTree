@@ -1,3 +1,5 @@
+using System;
+
 /// <summary>
 /// The AUD_ISound interface defines the specification of generic sound processing tree nodes.
 /// </summary>
@@ -5,6 +7,11 @@ public interface AUD_ISound
 {
     void Play();
     void Stop();
+    /// <summary>
+    /// Fired whenever the sound completed playing. <br/>
+    /// It could be simply fired whenever Stop() is called, or after some more specific processing, like once a stream finishes playing, or once a fader has completely faded out.
+    /// </summary>
+    event Action Finished;
     /// <summary>
     /// Retrieves the current effective VolumeDb of this sound. <br/>
     /// Cannot be modified directly, you should either modify the RelativeVolumeDb, or if it is exposed in the inspector by the implementing node, the BaseVolumeDb.
