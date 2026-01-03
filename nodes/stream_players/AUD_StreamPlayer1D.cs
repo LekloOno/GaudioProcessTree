@@ -18,7 +18,9 @@ public partial class AUD_StreamPlayer1D : AUD_StreamPlayer
                 _player.Finished -= ForwardFinished;
 
             _player = value;
-            _player.Finished += ForwardFinished;
+            if (_player != null)
+                _player.Finished += ForwardFinished;
+                
             UpdateConfigurationWarnings();
         }
     }

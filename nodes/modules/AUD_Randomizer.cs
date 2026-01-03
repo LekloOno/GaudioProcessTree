@@ -16,7 +16,7 @@ using Godot.Collections;
 [GlobalClass, Tool]
 public partial class AUD_Randomizer : AUD_Module
 {
-    private AUD_StreamPlayer _player;
+    private AUD_StreamPlayer _player = null;
     public AUD_StreamPlayer Player
     {
         get => _player;
@@ -26,7 +26,8 @@ public partial class AUD_Randomizer : AUD_Module
                 _player.Finished -= ForwardFinished;
 
             _player = value;
-            _player.Finished += ForwardFinished;
+            if (_player != null)
+                _player.Finished += ForwardFinished;
         }
     }
 
@@ -66,22 +67,22 @@ public partial class AUD_Randomizer : AUD_Module
     // ____________________
     protected override void ModuleEnterTree()
     {
-        _player = null;
+        Player = null;
         foreach (Node node in GetChildren())
             if (node is AUD_StreamPlayer player)
             {
-                _player = player;
+                Player = player;
                 return;
             }
     }
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
     {
-        _player = null;
+        Player = null;
         foreach (AUD_Sound sound in sounds)
             if (sound is AUD_StreamPlayer player)
             {
-                _player = player;
+                Player = player;
                 return;
             }
     }
@@ -94,7 +95,7 @@ public partial class AUD_Randomizer : AUD_Module
     {
         List<string> warnings = [];
 
-        if (_player == null)
+        if (Player == null)
             warnings.Add("This node has no Stream Player.\nConsider adding an AUD_StreamPlayer as a child.");
         if (TooManyStreamPlayer())
             warnings.Add("This node has multiple Stream Players.\nIt will only support one of them.");
@@ -135,34 +136,34 @@ public partial class AUD_Randomizer : AUD_Module
     // _____________________
     protected override void SetBaseVolumeDb(float volumeDb)
     {
-        if (_player == null) return;
-        _player.RelativeVolumeDb = volumeDb + RelativeVolumeDb;
+        if (Player == null) return;
+        Player.RelativeVolumeDb = volumeDb + RelativeVolumeDb;
     }
 
     protected override void SetRelativeVolumeDb(float volumeDb)
     {
-        if (_player == null) return;
-        _player.RelativeVolumeDb = BaseVolumeDb + volumeDb;
+        if (Player == null) return;
+        Player.RelativeVolumeDb = BaseVolumeDb + volumeDb;
     }
 
     protected override void SetBasePitchScale(float pitchScale)
     {
-        if (_player == null) return;
-        _player.RelativePitchScale = pitchScale * RelativePitchScale * _randomPitch;
+        if (Player == null) return;
+        Player.RelativePitchScale = pitchScale * RelativePitchScale * _randomPitch;
     }
     protected override void SetRelativePitchScale(float pitchScale)
     {
-        if (_player == null) return;
-        _player.RelativePitchScale = BasePitchScale * pitchScale * _randomPitch;
+        if (Player == null) return;
+        Player.RelativePitchScale = BasePitchScale * pitchScale * _randomPitch;
     }
 
     public override void Play()
     {
-        _player.Stream = _sounds.PickRandom();
+        Player.Stream = _sounds.PickRandom();
         _randomPitch = (float)GD.RandRange(_minPitch, _maxPitch);
-        _player.RelativePitchScale = _randomPitch * PitchScale;
-        _player.Play();
+        Player.RelativePitchScale = _randomPitch * PitchScale;
+        Player.Play();
     }
 
-    public override void Stop() => _player.Stop();
+    public override void Stop() => Player.Stop();
 }
