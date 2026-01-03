@@ -32,6 +32,12 @@ jobs:
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
+      - name: Download Doxygen Awesome CSS
+        run: |
+          mkdir -p docs/doxygen-awesome
+          wget -O docs/doxygen-awesome/doxygen-awesome.css https://raw.githubusercontent.com/jothepro/doxygen-awesome-css/main/css/doxygen-awesome.css
+          wget -O docs/doxygen-awesome/doxygen-awesome.js  https://raw.githubusercontent.com/jothepro/doxygen-awesome-css/main/js/doxygen-awesome.js
+
       - name: Generate Doxygen docs
         run: doxygen Doxyfile
 

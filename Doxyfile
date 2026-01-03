@@ -34,6 +34,10 @@ SEPARATE_MEMBER_PAGES  = YES
 ALWAYS_DETAILED_SEC    = YES
 OPTIMIZE_OUTPUT_FOR_CSHARP = YES
 
-# Optional: generate class diagrams
+# Optional class diagrams
 HAVE_DOT               = YES
 CLASS_DIAGRAMS         = YES
+
+# Style
+HTML_EXTRA_STYLESHEET = doxygen-awesome/doxygen-awesome.css
+HTML_EXTRA_FILES = doxygen-awesome/doxygen-awesome.js
