@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -8,21 +9,51 @@ using Godot;
 public partial class AUD_Layerer : AUD_Module
 {
     private List<AUD_Sound> _layers;
+    /// <summary>
+    /// On AUD_Layerer, Finished fires when all the layered sounds have themselves Finished.
+    /// </summary>
+    public override event Action Finished;
+    private int _playingSounds = 0;
 
     // +-----------------+
     // |  CONFIGURATION  |
     // +-----------------+
     // ____________________
+    private void AddLayer(AUD_Sound layer)
+    {
+        layer.Finished += TrackLayerLifetime;
+        _layers.Add(layer);
+    }
+
+    private void RemoveLayer(AUD_Sound layer)
+    {
+        layer.Finished -= TrackLayerLifetime;
+        _layers.Remove(layer);
+    }
+
+    private void ClearLayers()
+    {
+        foreach(AUD_Sound layer in _layers)
+            RemoveLayer(layer);
+    }
+
+    private void SetLayers(List<AUD_Sound> layers)
+    {
+        ClearLayers();
+        foreach(AUD_Sound layer in layers)
+            AddLayer(layer);
+    }
+
     protected override void ModuleEnterTree()
     {
-        _layers = [];
+        ClearLayers();
         foreach (Node node in GetChildren())
             if (node is AUD_Sound sound)
-                _layers.Add(sound);
+                AddLayer(sound);
     }
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds) =>
-        _layers = sounds;
+        SetLayers(sounds);
     
     // +-------------------+
     // |  CONFIG WARNINGS  |
@@ -72,6 +103,7 @@ public partial class AUD_Layerer : AUD_Module
 
     public override void Play()
     {
+        _playingSounds = _layers.Count;
         foreach (AUD_Sound layer in _layers)
             layer.Play();
     }
@@ -80,5 +112,11 @@ public partial class AUD_Layerer : AUD_Module
     {
         foreach (AUD_Sound layer in _layers)
             layer.Stop();
+    }
+
+    private void TrackLayerLifetime()
+    {
+        if (-- _playingSounds == 0)
+            Finished?.Invoke();
     }
 }
