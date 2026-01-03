@@ -33,8 +33,14 @@ public partial class AUD_Layerer : AUD_Module
 
     private void ClearLayers()
     {
-        foreach(AUD_Sound layer in _layers)
-            RemoveLayer(layer);
+        if (_layers == null)
+        {
+            _layers = [];
+            return;
+        }
+            
+        for (int i = _layers.Count - 1; i >= 0; i--)
+            RemoveLayer(_layers[i]);
     }
 
     private void SetLayers(List<AUD_Sound> layers)
