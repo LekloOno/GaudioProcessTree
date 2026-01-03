@@ -1,0 +1,39 @@
+# Doxyfile 1.15.0
+DOXYFILE_ENCODING      = UTF-8
+
+# Project info
+PROJECT_NAME           = "GaudioProcessTree"
+PROJECT_BRIEF          = "Godot plugin for audio process tree"
+
+# Input
+INPUT                  = .
+FILE_PATTERNS          = *.cs
+
+# Recursively scan subfolders
+RECURSIVE              = YES
+
+# Language
+OPTIMIZE_OUTPUT_FOR_CSHARP = YES
+
+# Extract comments
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+# Treat warnings as optional
+WARN_IF_UNDOCUMENTED   = NO
+WARN_NO_PARAMDOC       = NO
+
+# HTML output
+OUTPUT_DIRECTORY       = docs
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_TREEVIEW      = YES
+SEPARATE_MEMBER_PAGES  = YES
+ALWAYS_DETAILED_SEC    = YES
+OPTIMIZE_OUTPUT_FOR_CSHARP = YES
+
+# Optional: generate class diagrams
+HAVE_DOT               = YES
+CLASS_DIAGRAMS         = YES
