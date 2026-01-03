@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 /// <summary>
@@ -11,6 +12,13 @@ using Godot;
 [GlobalClass, Tool]
 public abstract partial class AUD_StreamPlayer : AUD_Sound
 {
+    /// <summary>
+    /// Determines the Finished and stopping behavior. <br/>
+    /// If true, calling Stop() has no effect, and Finished is only fired when the playing stream finishes without interruption. <br/>
+    /// If false, calling Stop() does interrupt the Stream, and fires the Finished event.
+    /// </summary>
+    [Export] private bool _oneShot;
+    public override sealed event Action Finished;
     public abstract AudioStream Stream {get; set;}
     public abstract StringName Bus {get; set;}
     public abstract AudioStreamPlayback GetStreamPlayBack();
@@ -25,4 +33,24 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
 
     protected override void SetRelativePitchScale(float pitchScale) =>
         PitchScale = BasePitchScale * pitchScale;
+
+    public override void Stop()
+    {
+        if (_oneShot)
+            return;
+
+        StopPlayer();
+        Finished?.Invoke();
+    }
+
+    /// <summary>
+    /// Used by implementing class to forward Finished event.
+    /// </summary>
+    protected void ForwardFinished() =>
+        Finished?.Invoke();
+
+    /// <summary>
+    /// Defines the way of concretely stopping the wrapped stream player.
+    /// </summary>
+    protected abstract void StopPlayer();
 }
