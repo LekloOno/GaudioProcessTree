@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
@@ -12,6 +13,15 @@ public partial class AUD_Randomizer : AUD_Module
 {
     protected AUD_StreamPlayer _player;
     protected Array<AudioStream> _sounds;
+    /// <summary>
+    /// On AUD_Randomizer, Finished fires whenever its player has completed playing.
+    /// </summary>
+    public override event Action Finished
+    {
+        add => _player.Finished += value;
+        remove => _player.Finished -= value;   
+    }
+
     [Export] public Array<AudioStream> Sounds
     {
         get => _sounds;
