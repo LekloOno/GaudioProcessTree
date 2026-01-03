@@ -10,6 +10,11 @@ public partial class AUD_Fader : AUD_Module
 {
     private AUD_Sound _sound;
     /// <summary>
+    /// On AUD_Fader, Finished fires when the fader completes fading out <br/>
+    /// (might change it later to simply propagates the faded sound Finished event ?)
+    /// </summary>
+    public override event Action Finished;
+    /// <summary>
     /// Time for the volume to reach _volume on start - in seconds.
     /// </summary>
     [Export(PropertyHint.Range, "0,5,exp,or_greater")]
@@ -188,6 +193,10 @@ public partial class AUD_Fader : AUD_Module
             _sound.RelativeVolumeDb = _currentTargetVolume;
             _onUpdate -= Fade;
             SetPhysicsProcess(false);
+
+            if (_muting)
+                Finished?.Invoke();
+
             return;
         }
 
