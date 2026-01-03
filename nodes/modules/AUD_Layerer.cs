@@ -8,12 +8,17 @@ using Godot;
 [GlobalClass, Tool]
 public partial class AUD_Layerer : AUD_Module
 {
-    private List<AUD_Sound> _layers;
+    protected LinkedList<AUD_Sound> _layers;
     /// <summary>
     /// On AUD_Layerer, Finished fires when all the layered sounds have themselves Finished.
     /// </summary>
     public override event Action Finished;
-    private int _playingSounds = 0;
+    /// <summary>
+    /// Used by implementing class to forward Finished event.
+    /// </summary>
+    protected void ForwardFinished() =>
+        Finished?.Invoke();
+    protected int _playingSounds = 0;
 
     // +-----------------+
     // |  CONFIGURATION  |
@@ -22,13 +27,20 @@ public partial class AUD_Layerer : AUD_Module
     private void AddLayer(AUD_Sound layer)
     {
         layer.Finished += TrackLayerLifetime;
-        _layers.Add(layer);
+        _layers.AddLast(layer);
     }
 
     private void RemoveLayer(AUD_Sound layer)
     {
         layer.Finished -= TrackLayerLifetime;
         _layers.Remove(layer);
+    }
+
+    private void Pop()
+    {
+        AUD_Sound layer = _layers.Last.Value;
+        layer.Finished -= TrackLayerLifetime;
+        _layers.RemoveLast();
     }
 
     private void ClearLayers()
@@ -40,7 +52,7 @@ public partial class AUD_Layerer : AUD_Module
         }
             
         for (int i = _layers.Count - 1; i >= 0; i--)
-            RemoveLayer(_layers[i]);
+            Pop();
     }
 
     private void SetLayers(List<AUD_Sound> layers)
