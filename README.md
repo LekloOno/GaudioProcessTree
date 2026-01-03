@@ -122,3 +122,91 @@ Then, you can set this script as an autoload in `Project Settings > Globals > Pa
 You can also implement your own specification. For example, mine is a wrapper of my PHX_Time class.  
 
 The general idea is simple - implement AUD_ILocalTime, and make sure an instance of this implementation is set as the static `AUD_Time` instance reference before running, so typically using an auto-load with `_EnterTree` like in the examples provided before.
+
+
+#### Example case for a completely modular approach
+
+In my case, I wanted my `PHX_Time` to be completely independant of `AUD_Time`, and still have this later rely on it.    
+The setup is fairly simple. Below is the `PHX_Time` script, which is an auto-load singleton node.
+
+```cs
+public partial class PHX_Time : Node
+{
+    public static PHX_Time Instance {get; private set;}
+    /// <summary>
+    /// The scaled time (pause and time scale-aware) elapsed since the start of the engine in Miliseconds. <br/>
+    /// <br/>
+    /// Should be used in _PhysicsProcess. Any logic that requires scaled time in _Process can probably rely on tweens or timer instead. 
+    /// </summary>
+    public static ulong ScaledTicksMsec {get => Instance._scaledTicksMsec;}
+    /// <summary>
+    /// The scaled time (pause and time scale-aware) elapsed since the start of the engine in Microseconds. <br/>
+    /// <br/>
+    /// Should be used in _PhysicsProcess. Any logic that requires scaled time in _Process can probably rely on tweens or timer instead. 
+    /// </summary>
+    public static ulong ScaledTicksUsec {get => Instance._scaledTicksUsec;}
+
+    public ulong LocalScaledTicksMsec => _scaledTicksMsec;
+
+    public ulong LocalScaledTicksUsec => _scaledTicksUsec;
+
+    private ulong _scaledTicksMsec = 0;
+    private ulong _scaledTicksUsec = 0;
+    public override void _EnterTree()
+    {
+        Instance = this;
+        StaticServiceLifeCycle<PHX_Time>.MarkInitialized();
+    }
+
+    public override void _Ready()
+    {
+        ProcessMode = ProcessModeEnum.Pausable;
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        double deltaMsec = delta * 1000;
+        _scaledTicksMsec += (ulong) deltaMsec;
+        _scaledTicksUsec += (ulong) deltaMsec * 1000;;
+    }
+}
+```
+
+Note the `StaticServiceLifeCycle<PHX_Time>.MarkInitialized();`. We will come back to it.
+
+Then, I have another autoload glue-node named `Bootstrap` which notably binds `PHX_Time` to `AUD_Time` in the following manner.
+```cs
+public partial class Bootstrap : Node
+{
+    class PHX_LocalTimeWrapper : AUD_ILocalTime
+    {
+        public ulong LocalScaledTicksMsec => PHX_Time.ScaledTicksMsec;
+        public ulong LocalScaledTicksUsec => PHX_Time.ScaledTicksUsec;
+    }
+
+    public async override void _EnterTree()
+    {
+        await StaticServiceLifeCycle<PHX_Time>.Initialized;
+        AUD_Time.Instance = new PHX_LocalTimeWrapper();
+    }
+}
+```
+Here comes the point of `StaticServiceLifeCycle<PHX_Time>.MarkInitialized();`.  
+It is not necessary, godot should load auto-load nodes in the order you specified, so I could simply place the bootstrap later than PHX_Time in the list.  
+Not only that - since my glue class only requires `PHX_Time` to be correctly initialized on properties access, and not construction, having `Bootstrap` execute first would most likely not cause any issue, as the properties are only accessed at runtime - that is after all auto-loads should be correctly initialized.
+
+Yet, I just prefered to have this strict guarantee.
+
+For further details, here is the my so called `StaticServiceLifeCycle`.
+
+```cs
+public static class StaticServiceLifeCycle<T>
+{
+    private static readonly TaskCompletionSource _tcs = new();
+
+    public static Task Initialized => _tcs.Task;
+
+    public static void MarkInitialized()
+        => _tcs.TrySetResult();
+}
+```
