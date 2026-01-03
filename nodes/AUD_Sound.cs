@@ -1,6 +1,7 @@
 using System;
 using Godot;
 
+namespace GaudioProcessTree;
 /// <summary>
 /// The AUD_Sound class defines the base abstraction and implementation of AUD_ISound sound processing tree nodes. <br/>
 /// <br/>

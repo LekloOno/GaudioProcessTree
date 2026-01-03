@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
+namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
 /// Plays a random sound on a given player, with pitchScale randomization. <br/>
 /// It does not play a random AUD_Sound ! Its child must be an AUD_StreamPlayer. <br/>

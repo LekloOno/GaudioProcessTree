@@ -1,4 +1,5 @@
 using Godot;
+using GaudioProcessTree.Static.Time;
 
 /// <summary>
 /// An example binding for AUD_Time with basic time scale handling. <br/>

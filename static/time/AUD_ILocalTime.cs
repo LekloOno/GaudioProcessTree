@@ -1,5 +1,4 @@
-using Godot;
-
+namespace GaudioProcessTree.Static.Time;
 /// <summary>
 /// Base interface to define an instance of time manager.
 /// </summary>

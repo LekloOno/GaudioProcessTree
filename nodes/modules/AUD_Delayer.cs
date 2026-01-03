@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
+namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
 /// Plays a sound with a given delay in seconds.
 /// </summary>

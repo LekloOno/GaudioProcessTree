@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Godot;
 
+namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
 /// Specialization of AUD_RandomSound that runs each new stream Play on a parallel channel. <br/>
 /// <br/>

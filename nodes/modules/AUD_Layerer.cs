@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Godot;
 
+namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
 /// Plays and control multiple children sound as one.
 /// </summary>

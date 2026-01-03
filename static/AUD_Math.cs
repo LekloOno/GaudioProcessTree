@@ -1,5 +1,6 @@
 using Godot;
 
+namespace GaudioProcessTree.Static;
 /// <summary>
 /// Some static methods for simple audio-related maths.
 /// </summary>

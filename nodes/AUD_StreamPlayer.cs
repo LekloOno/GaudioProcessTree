@@ -1,6 +1,8 @@
 using System;
 using Godot;
 
+
+namespace GaudioProcessTree.Nodes;
 /// <summary>
 /// A Stream Player is a leaf node in an AUD_Sound processing tree. <br/>
 /// It binds the tree branch to a concrete Godot AudioStreamPlayer by wrapping it under a generic interface so that any kind of AudioStreamPlayer (simple, 2D, 3D) can be used.<br/>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+namespace GaudioProcessTree.Nodes.StreamPlayers;
 /// <summary>
 /// AUD_StreamPlayer implementation for Godot's AudioStreamPlayer3D.
 /// </summary>
@@ -20,7 +21,7 @@ public partial class AUD_StreamPlayer3D : AUD_StreamPlayer
             _player = value;
             if (_player != null)
                 _player.Finished += ForwardFinished;
-                
+
             UpdateConfigurationWarnings();
         }
     }

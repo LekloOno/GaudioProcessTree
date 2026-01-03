@@ -1,5 +1,7 @@
 using System;
 
+namespace GaudioProcessTree;
+
 /// <summary>
 /// The AUD_ISound interface defines the specification of generic sound processing tree nodes.
 /// </summary>

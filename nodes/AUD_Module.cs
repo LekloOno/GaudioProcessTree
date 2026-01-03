@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+
+namespace GaudioProcessTree.Nodes;
+
 /// <summary>
 /// A sound module is a non-leaf node in an AUD_Sound processing tree. <br/>
 /// It encapsulates one or multiple other AUD_Sound - its children - and provides interractions with them through its AUD_Sound and AUD_Module implementation.

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
+namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
 /// Instead of playing all the layers together, the sequencer waits for each child to finish playing to play the next one. <br/>
 /// The children order in tree is the order in which the sounds will be played.
