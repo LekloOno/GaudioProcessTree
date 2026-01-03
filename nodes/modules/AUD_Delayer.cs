@@ -9,7 +9,7 @@ using Godot;
 /// <see cref="Finished"/> fires when the delayed sound completes, or when the delayed play got cancel before the sound could actually start playing.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_delayer.svg")]
 public partial class AUD_Delayer : AUD_Module
 {
     [Export(PropertyHint.Range, "0,10,exp,or_greater")]

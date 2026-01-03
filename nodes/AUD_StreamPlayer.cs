@@ -9,7 +9,7 @@ using Godot;
 /// It is intentionnal, not to break possible Node3D/Node2D required spatial hierarchy, since AUD_Sound only extends Node. <br/>
 /// You can thus place an AudioStreamPlayer2D/3D wherever you want to be correctly spatially-parented.
 /// </summary>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_stream_player.svg")]
 public abstract partial class AUD_StreamPlayer : AUD_Sound
 {
     /// <summary>

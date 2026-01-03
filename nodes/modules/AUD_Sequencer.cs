@@ -10,7 +10,7 @@ using Godot;
 /// <see cref="Finished"/> fires once the whole sequence has completed playing, that is, its last children has fired Finished.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_sequencer.svg")]
 public partial class AUD_Sequencer : AUD_Layerer
 {
     private LinkedListNode<AUD_Sound> _currentSound;

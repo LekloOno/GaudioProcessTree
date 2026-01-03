@@ -8,7 +8,7 @@ using Godot;
 /// The module nodes provide specific interfaces for various redundant processing operation like fading, layering, randomization, etc. <br/>
 /// The stream nodes bind this tree to concrete Godot AudioStreamPlayers, in a generic manner so that any "spatialness" can be relevant to the same processing tree.
 /// </summary>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_tree_node.svg")]
 public abstract partial class AUD_Sound : Node, AUD_ISound
 {
     protected const float MIN_PITCH = 0.001f;

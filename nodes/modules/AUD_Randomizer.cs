@@ -13,7 +13,7 @@ using Godot.Collections;
 /// <see cref="Finished"/> is a direct forward of its player Finished event.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_randomizer.svg")]
 public partial class AUD_Randomizer : AUD_Module
 {
     private AUD_StreamPlayer _player = null;

@@ -17,7 +17,7 @@ using Godot;
 /// <see cref="Finished"/> fires once every stream channel has stopped.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_parallelizer.svg")]
 public partial class AUD_Parallelizer : AUD_Randomizer
 {
     readonly struct Voice()

@@ -10,7 +10,7 @@ using Godot;
 /// <see cref="Finished"/> fires when the fader completes fading out.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_fader.svg")]
 public partial class AUD_Fader : AUD_Module
 {
     private AUD_Sound _sound;

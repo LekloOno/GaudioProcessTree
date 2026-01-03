@@ -10,7 +10,7 @@ using Godot;
 /// <see cref="Finished"/> fires once every sound layer have themselves Finished.
 /// </para>
 /// </remarks>
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/GaudioProcessTree/icons/gaudio_layerer.svg")]
 public partial class AUD_Layerer : AUD_Module
 {
     protected LinkedList<AUD_Sound> _layers;
