@@ -1,3 +1,5 @@
+[![Documentation](https://img.shields.io/badge/docs-GaudioProcessTree-blue)](https://lekloono.github.io/GaudioProcessTree/)
+
 This plugin provides a way to describe audio processing in a tree-like structure, with various common tools and spatial abstraction to Godot AudioStreamPlayer.
 
 It has been built as part of my engine extensions in an unrelated Godot project. Thus, the commit history might be quite inconsistent as it is an abrupt git filter-repo of the original project, that included undirectly related commits to this work that might have been scrapped in the process.
@@ -18,6 +20,7 @@ It has been built as part of my engine extensions in an unrelated Godot project.
     - [Simple - Use provided scale implementation](#simple---use-provided-scale-implementation)
     - [Advanced - Implement your own `AUD_ILocalTime`](#advanced---implement-your-own-aud_ilocaltime)
       - [Example case for a completely modular approach](#example-case-for-a-completely-modular-approach)
+- [Full documentation](#full-documentation)
 
 
 # Getting started
@@ -242,3 +245,7 @@ public static class StaticServiceLifeCycle<T>
         => _tcs.TrySetResult();
 }
 ```
+
+# Full documentation
+
+Full plugin documentation is available [right here](https://lekloono.github.io/GaudioProcessTree/).
