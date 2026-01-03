@@ -66,7 +66,6 @@ public partial class AUD_Parallelizer : AUD_Randomizer
 
     private AudioStreamPlaybackPolyphonic _playback;
     private readonly LinkedList<VoiceTracker> _voices = new();
-    private int _activeVoices = 0;
 
     // +-------------------+
     // |  CONFIG WARNINGS  |
@@ -147,15 +146,13 @@ public partial class AUD_Parallelizer : AUD_Randomizer
         double length = stream.GetLength();
 
         _voices.AddLast(new VoiceTracker(newVoice, randomPitch, length));
-
-        _activeVoices ++;
     }
 
     private void RemoveVoice(long id)
     {
         _playback.SetStreamVolume(id, -80f);
         _playback.StopStream(id);
-        if (-- _activeVoices == 0)
+        if (_voices.Count == 0)
             ForwardFinished();
     }
 
