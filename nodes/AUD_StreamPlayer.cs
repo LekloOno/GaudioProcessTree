@@ -17,7 +17,7 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
     /// If true, calling Stop() has no effect, and Finished is only fired when the playing stream finishes without interruption. <br/>
     /// If false, calling Stop() does interrupt the Stream, and fires the Finished event.
     /// </summary>
-    [Export] private bool _oneShot;
+    [Export] private bool _interruptable = true;
     public override sealed event Action Finished;
     public abstract AudioStream Stream {get; set;}
     public abstract StringName Bus {get; set;}
@@ -36,7 +36,7 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
 
     public override void Stop()
     {
-        if (_oneShot)
+        if (!_interruptable)
             return;
 
         StopPlayer();
