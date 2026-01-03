@@ -14,6 +14,7 @@ RECURSIVE              = YES
 
 # Language
 OPTIMIZE_OUTPUT_FOR_CSHARP = YES
+HIDE_SCOPE_NAMES = YES
 
 # Extract comments
 EXTRACT_ALL            = YES
