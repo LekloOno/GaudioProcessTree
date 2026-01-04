@@ -1,5 +1,5 @@
-@ingroup guides
-@page 4_tutorial_gun Example Tutorial – Gun Sound
+@ingroup 2_guides
+@page 3_tutorial_gun Example Tutorial – Gun Sound
 
 This tutorial demonstrates how to design a gun sound using GaudioProcessTree.
 

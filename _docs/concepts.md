@@ -1,5 +1,5 @@
-@ingroup guides
-@page 2_concepts General Concepts
+@ingroup 2_guides
+@page 1_concepts General Concepts
 
 @section general_idea General Idea
 
