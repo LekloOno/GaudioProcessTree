@@ -48,6 +48,14 @@ public partial class AUD_Delayer : AUD_Module
             }
     }
 
+    protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
+    {
+        if (sounds.Count == 0)
+            Sound = null;
+        else
+            Sound = sounds[0];
+    }
+
     // +-------------------+
     // |  CONFIG WARNINGS  |
     // +-------------------+
@@ -75,14 +83,6 @@ public partial class AUD_Delayer : AUD_Module
                     found = true;
 
         return false;
-    }
-
-    protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
-    {
-        if (sounds.Count == 0)
-            Sound = null;
-        else
-            Sound = sounds[0];
     }
 
     // +-------------------+
