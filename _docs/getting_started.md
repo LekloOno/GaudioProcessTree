@@ -20,7 +20,7 @@ Then, you must compile, and enable it under `Project > Project Settings > Plugin
 
 You can start building your processing tree using the different @ref AUD_Sound nodes.  
 
-All `AUD_Sound` tree branches should terminate with an @ref AUD_StreamPlayer leaf node (which itself is an `AUD_Sound`). More on than in @ref AUD_StreamPlayer_usage's section.
+All `AUD_Sound` tree branches should terminate with an @ref AUD_StreamPlayer leaf node (which itself is an `AUD_Sound`). More on than in @ref aud_streamplayer section.
 
 @section dependency_note Important note on dependency
 
