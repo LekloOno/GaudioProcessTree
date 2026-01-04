@@ -16,7 +16,7 @@ The plugin enables multiple features:
 - Various built-in processing modules, like fader, randomizer, sequencer, etc.
 - Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
 
-@subsection aud_sound AUD_Sound common concept
+@subsection aud_sound AUD_Sound common concepts
 
 @subsubsection relative_properties Relative levels of VolumeDb and PitchScale
 Each @ref AUD_Sound has:

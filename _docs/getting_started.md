@@ -12,7 +12,7 @@ If you want to, you can also make it a submodule of your own repository, using t
 ```sh
 git submodule add git@github.com:LekloOno/GaudioProcessTree.git GaudioProcessTree
 ```
-(Assuming the plugin is currently in relative path `GaudioProcessTree`)
+(Assuming the plugin is currently in this `GaudioProcessTree` relative path)
 
 Then, you must compile, and enable it under `Project > Project Settings > Plugins`.
 
@@ -20,7 +20,9 @@ Then, you must compile, and enable it under `Project > Project Settings > Plugin
 
 You can start building your processing tree using the different @ref AUD_Sound nodes.  
 
-All `AUD_Sound` tree branches should terminate with an @ref AUD_StreamPlayer leaf node (which itself is an `AUD_Sound`). More on than in @ref aud_streamplayer section.
+All `AUD_Sound` tree branches should terminate with an @ref AUD_StreamPlayer leaf node (which itself is an `AUD_Sound`). More on than in @ref aud_streamplayer section.  
+
+I recommend reading through the @ref aud_sound section to get a grasp of the basic principles and features of this plugin.
 
 @section dependency_note Important note on dependency
 
