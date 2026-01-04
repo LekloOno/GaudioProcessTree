@@ -1,6 +1,6 @@
 @page guides Guides
 
-@section 2_1_concepts General Concepts
+@section concepts General Concepts
 
 @subsection general_idea Idea
 
@@ -56,7 +56,7 @@ Parenting AUD_StreamPlayer:
 They wrap Godot’s `AudioStreamPlayer` types in a generic way, allowing the same
 processing tree to work with 2D, 3D, or non-spatial audio.
 
-@section 2_2_time_dependency AUD_Time Dependency
+@section time_dependency AUD_Time Dependency
 
 @subsection simplest Simplest – Delete or modify AUD_Fader
 
@@ -218,7 +218,7 @@ public static class StaticServiceLifeCycle<T>
 }
 ```
 
-@section 2_3_tutorial_gun Example Tutorial – Gun Sound
+@section tutorial_gun Example Tutorial – Gun Sound
 
 This tutorial demonstrates how to design a gun sound using GaudioProcessTree.
 

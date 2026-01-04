@@ -12,11 +12,11 @@ It enables :
 This documentation is split into the following sections:
 
 - @ref getting_started
-  - @ref 1_1_installation
-  - @ref 1_2_brief_usage
-  - @ref 1_3_dependency_note
-  - @ref 1_4_editor_integration
+  - @ref installation
+  - @ref brief_usage
+  - @ref dependency_note
+  - @ref editor_integration
 - @ref guides
-  - @ref 2_1_concepts
-  - @ref 2_2_time_dependency
-  - @ref 2_3_tutorial_gun
+  - @ref concepts
+  - @ref time_dependency
+  - @ref tutorial_gun
