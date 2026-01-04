@@ -11,27 +11,58 @@ tree-like processing chains.
 
 The plugin enables multiple features:
 - Relative volume and pitch propagation, in a similar fashion to local and global transform parenting on Node2D/Node3D.
+- Dynamic time-relative pitch scaling, to stretch and squeeze streams when time scale is changed (through any root node configuration, or through the specific AUD_TimeScaler)
 - Bindings for time-scale compliance.
 - Various built-in processing modules, like fader, randomizer, sequencer, etc.
 - Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
 
 @subsection aud_sound AUD_Sound common concept
 
+@subsubsection relative_properties Relative levels of VolumeDb and PitchScale
 Each @ref AUD_Sound has:
 
 - Base
 - Relative
+- Local
 - Absolute
 
-properties for both **VolumeDb** and **PitchScale**.
+designation for both its **volume (db)** and **pitch scale** properties.
 
-Relative properties propagate to children, similar to transform inheritance on Node2D/3D.
+**Base** volume/pitch is a value you can set in the inspector, think of it as the "local transform" of Node2D that you tweak in your scene, but sound-wise.
 
-`VolumeDb` is additive since it is already on a logarithmic scale (decibels), and `PitchScale` is multiplicative.  
-That is, a `RelativeVolumeDb` of 0 and `RelativePitchScale` of 1 respectively gives the "original" volume and pitch scale of the target.
+**Relative** is a modifier that allows to modulate and propagate changes on tree children without overriding the base property. Its purpose is runtime only, it is typically used within `AUD_Sound` themselves to propagate changes. Thus it isn't exposed in the editor, but you can also manipulate it in external runtime code.
 
-Similarly, setting a parent node `Base` or `RelativeVolumeDb` to -1, and its children to +1, will effectively cancel out.  
-For pitch scale, setting the parent's `Base` or `RelativePitchScale` to 2, and its children to 0.5 will cancel out.
+**Local** (commonly just called *VolumeDb* and *PitchScale* on `AUD_Sound` nodes) is the result of the combination of <u>Base</u> and <u>Relative</u> properties.
+
+**Absolute** is the result of the combination of the <u>Local</u> property, and eventual engine time scaling. For the volume, time scale has no effect, so the absolute volume is equivalent to the local volume. But time scale strecthes sounds, so the absolute pitch scale can differ from the local pitch scale.
+
+@subsubsection note_on_scales Note on volume and pitch scales
+
+**Volume** is additive since it is already on a logarithmic scale (decibels).
+So, setting `RelativeVolumeDb` to 0 will result in the "original" volume - `BaseVolumeDb`.  
+Similarly, setting a parent node volume (base or relative) to -1, and its children to +1, will effectively cancel out.
+
+**Pitch** on the other hand is multiplicative, since it is relative to the frequency of the sound. Thus, it can never be 0, and setting `RelativePitchScale` to 1 will result in the "original" pitch - `BasePitchScale`.  
+As well, setting a parent node pitch (base or relative) to 2, and its children to 0.5 will cancel out.
+
+@subsubsection time_scaling Pitch time scaling
+
+By default, all GaudioProcessTrees use pitch time scaling. This option makes so pitch scale grows proportionnaly to engine speed, to reflect a realistic slow-mo effect in sounds.  
+With slower engine speeds, the sounds will get pitched down, and with faster engine speed, it will get pitched up.  
+
+This is fully dynamic, even already playing sound will get properly modulated in real time.
+
+The option is visible for any root node of a GaudioProcessTree, under "AUD_Sound Time" category, as "Use Time Scale" flag.
+
+![alt text](gaudio_use_time_scale.png)
+
+@attention
+This option is only visible for root node (of a GaudioProcessTree), as it controls the entire tree scaling behavior.
+
+Additionnaly, you can use the AUD_TimeScaler node to time scale only parts of a GaudioProcessTree, if necessary.
+
+@warning
+Nothing prevents you from enabling root time scaling, and AUD_TimeScaler together, or even multiple AUD_TimeScaler. The time scalers will still reapply time scaling, which will exponentially scale pitch, but eh - it's possible !
 
 @subsection aud_module AUD_Module
 
@@ -44,7 +75,7 @@ Parenting AUD_Sound:
 - @ref AUD_Fader – fading sounds in and out
 - @ref AUD_Sequencer – sequential playback
 - @ref AUD_Delayer – delayed playback
-- @ref AUD_TimeScaler - scales the pitch of tree branch with engine's time scale 
+- @ref AUD_TimeScaler - scales the pitch of the following tree branch with engine's time scale
 Parenting AUD_StreamPlayer:
 - @ref AUD_RandomSound – randomizing sound selection and pitch
 - @ref AUD_ParallelSound – running randomized streams in parallel
@@ -55,6 +86,9 @@ Parenting AUD_StreamPlayer:
 
 They wrap Godot’s `AudioStreamPlayer` types in a generic way, allowing the same
 processing tree to work with 2D, 3D, or non-spatial audio.
+
+@important
+Inside GaudioProcessTrees, do not try to change the volume/pitch of a sound through the `AudioStreamPlayer`. It will have no effect, as your changes will be overwritten by the containing `AUD_StreamPlayer`. You should set these properties in the Base volume and pitch of the `AUD_StreamPlayer` instead.
 
 @section time_dependency AUD_Time Dependency
 

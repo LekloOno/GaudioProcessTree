@@ -9,7 +9,7 @@ using tree-like structures, inspired by Node2D / Node3D parenting.
 
 The plugin enables:
 - Relative volume and pitch propagation, in a similar fashion to local and global transform parenting on Node2D/Node3D.
-- Dynamic time-relative pitch scaling, to stretch and squeeze streams when time scale is changed.
+- Dynamic time-relative pitch scaling, to stretch and squeeze streams when time scale is changed (through any root node configuration, or through the specific AUD_TimeScaler)
 - Binding interfaces for time-scale compliance and ready-to-use implementing templates.
 - Various built-in processing modules, like fader, randomizer, sequencer, etc.
 - Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
