@@ -1,24 +1,81 @@
-@ingroup 2_guides
-@page 2_time_dependency AUD_Time Dependency
+@page 2_guides Guides
 
-@section simplest Simplest – Delete or modify AUD_Fader
+@section 2_1_concepts General Concepts
 
-@subsection do-not-use-fader Don't use or delete AUD_FADER
+@subsection general_idea Idea
+
+The idea is to mimic Node2D / Node3D parenting for audio modules.
+
+You can parent any `AUD_Sound` derivative to another one, creating
+tree-like processing chains.
+
+The plugin enables multiple features:
+- Relative volume and pitch propagation, in a similar fashion to local and global transform parenting on Node2D/Node3D.
+- Bindings for time-scale compliance.
+- Various built-in processing modules, like fader, randomizer, sequencer, etc.
+- Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
+
+@subsection aud_sound AUD_Sound common concept
+
+Each @ref AUD_Sound has:
+
+- Base
+- Relative
+- Absolute
+
+properties for both **VolumeDb** and **PitchScale**.
+
+Relative properties propagate to children, similar to transform inheritance on Node2D/3D.
+
+`VolumeDb` is additive since it is already on a logarithmic scale (decibels), and `PitchScale` is multiplicative.  
+That is, a `RelativeVolumeDb` of 0 and `RelativePitchScale` of 1 respectively gives the "original" volume and pitch scale of the target.
+
+Similarly, setting a parent node `Base` or `RelativeVolumeDb` to -1, and its children to +1, will effectively cancel out.  
+For pitch scale, setting the parent's `Base` or `RelativePitchScale` to 2, and its children to 0.5 will cancel out.
+
+@subsection aud_module AUD_Module
+
+@ref AUD_Module are non-leaf nodes that can parent other modules or stream players. They provide common processing patterns.
+
+Currently implemented modules:
+
+Parenting AUD_Sound:
+- @ref AUD_LayeredSound – layering multiple sounds
+- @ref AUD_Fader – fading sounds in and out
+- @ref AUD_Sequencer – sequential playback
+- @ref AUD_Delayer – delayed playback
+- 
+Parenting AUD_StreamPlayer:
+- @ref AUD_RandomSound – randomizing sound selection and pitch
+- @ref AUD_ParallelSound – running randomized streams in parallel
+
+@subsection aud_streamplayer AUD_StreamPlayer
+
+@ref AUD_StreamPlayer are leaf nodes and provide the concrete binding to Godot.
+
+They wrap Godot’s `AudioStreamPlayer` types in a generic way, allowing the same
+processing tree to work with 2D, 3D, or non-spatial audio.
+
+@section 2_2_time_dependency AUD_Time Dependency
+
+@subsection simplest Simplest – Delete or modify AUD_Fader
+
+@subsubsection do-not-use-fader Don't use or delete AUD_FADER
 
 Of course, you can simply not use @ref AUD_Fader or delete it. The rest of the plugin is fully standalone.
 
 You could eventually also implement your own fader by extending @ref AUD_Module.
 
-@subsection modify-fader Modify AUD_Fader source
+@subsubsection modify-fader Modify AUD_Fader source
 
 Another simple solution is to modify @ref AUD_Fader. You can replace every occurence of `AUD_Time.ScaledTicksMsec` by `Time.GetTicksMsec()`, and it will fully work, but will not take time-scale and pauses into account.
 
-@section enable Enable AUD_Fader via AUD_Time
+@subsection enable Enable AUD_Fader via AUD_Time
 
 To keep the plugin flexible, time handling is abstracted through
 @ref AUD_Time and @ref AUD_ILocalTime.
 
-@subsection no_scale Very simple – No time scale
+@subsubsection no_scale Very simple – No time scale
 
 If you don't mind about time scale at all, you can simply implement a static AUD_ILocalTime as provided in the @ref AUD_ILocalTime templates.
 
@@ -37,7 +94,7 @@ public partial class AUD_NoTimeScale : Node, AUD_ILocalTime
 
 Then, you can set this script as an autoload in `Project > Project Settings > Globals > Path (folder icon)`, and select the @ref AUD_NoTimeScale script.
 
-@subsection scale Simple – Use provided scale implementation
+@subsubsection scale Simple – Use provided scale implementation
 
 The second provided template is a simple implementation that accumulates scaled time in `_PhysicsProcess`.
 
@@ -64,7 +121,7 @@ public partial class AUD_ExampleTime : Node, AUD_ILocalTime
 
 Again, you can set this script as an autoload in `Project > Project Settings > Globals > Path (folder icon)`, and select the @ref AUD_ExampleTime script.
 
-@subsection advanced Advanced – Custom implementation
+@subsubsection advanced Advanced – Custom implementation
 
 You can implement your own @ref AUD_ILocalTime, for example by wrapping
 an existing time system of your own. This allows complete decoupling between audio and global timing logic.
@@ -160,3 +217,40 @@ public static class StaticServiceLifeCycle<T>
         => _tcs.TrySetResult();
 }
 ```
+
+@section 2_3_tutorial_gun Example Tutorial – Gun Sound
+
+This tutorial demonstrates how to design a gun sound using GaudioProcessTree.
+
+@subsection gun_structure Decomposing the sound
+
+A rapid-fire gun sound can be split into:
+
+- Attack sound
+- Hold sound
+- Tail sound
+
+Usually, you would typically have some glue between each of these events, and an associated sound to play.  
+Instead, you can build a processing tree and have a much simpler glue - that is, start and stop playing the "gun sound", whatever that even means.
+
+@subsection gun_tree Example processing tree
+
+![Gun example](gun_example.png)
+
+- A layerer plays the impact sound and a sequencer together
+- The sequencer fades in the hold sound, then plays the tail sound once the fader starts fading out.
+
+@subsection adding_variation Adding variation
+
+Let's add some sugar coating: Maybe we want to pick random sounds with random pitch scales for the impact and tail sound, so it does not get too repetitive.
+
+You can do that using an additional @ref AUD_RandomSound or @ref AUD_ParallelSound.
+
+![Parallelizer](parallelizer.png)
+![Parallelizer settings](parallelizer_settings.png)
+
+Maybe we want to go one step further, and layer the impact sound as multiple randomized sounds:
+
+![Layerer](layerer.png)
+
+This approach keeps gameplay code simple while allowing rich and flexible in-editor sound design.  

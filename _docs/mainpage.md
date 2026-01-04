@@ -11,8 +11,10 @@ It enables :
 
 This documentation is split into the following sections:
 
-- @ref 1_s1_getting_started
-- @ref 2_editor_integration
-- @ref 1_concepts
-- @ref 2_time_dependency
-- @ref 3_tutorial_gun
+- @ref 1_1_installation
+- @ref 1_2_brief_usage
+- @ref 1_3_dependency_note
+- @ref 1_4_editor_integration
+- @ref 2_1_concepts
+- @ref 2_2_time_dependency
+- @ref 2_3_tutorial_gun

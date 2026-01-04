@@ -1,7 +1,6 @@
-@ingroup 1_getting_started
-@page 1_s1_getting_started Getting Started
+@page geting_started Getting Started
 
-@section installation Installation
+@section 1_1_installation Installation
 
 To get started, clone the repository into your project's `addons` directory:
 
@@ -17,13 +16,13 @@ git submodule add git@github.com:LekloOno/GaudioProcessTree.git GaudioProcessTre
 
 Then, you must compile, and enable it under `Project > Project Settings > Plugins`.
 
-@section brief_usage Brief usage
+@section 1_2_brief_usage Brief usage
 
 You can start building your processing tree using the different @ref AUD_Sound nodes.  
 
 All `AUD_Sound` tree branches should terminate with an @ref AUD_StreamPlayer leaf node (which itself is an `AUD_Sound`). More on than in @ref AUD_StreamPlayer_usage's section.
 
-@section dependency_note Important note on dependency
+@section 1_3_dependency_note Important note on dependency
 
 The plugin is almost entirely standalone, but the provided module @ref AUD_Fader depends on a time provider abstraction.
 
@@ -36,4 +35,24 @@ You have four option:
 - Intermediate - Use the provided time scale template.
 - Advanced - Implement your own `AUD_ILocalTime`.
 
-A step-by-step guide for each of these options is available in @ref 2_time_dependency.
+A step-by-step guide for each of these options is available in @ref 2_2_time_dependency.
+
+@section 1_4_editor_integration Editor Integration
+
+The plugin integrates directly into the Godot editor.
+
+It provides:
+- Dedicated nodes icons
+- Configuration warnings
+- In-depth Editor-time properties validation and hints
+
+These features guide users through the set up of an audio processing trees
+and help avoid invalid configurations or unexpected behaviors.
+
+@subsection icons Dedicated icons
+
+![Dedicated Icons](icons.png)
+
+@subsection warnings Configuration warnings example
+
+![Configuration Warnings](warnings_example.png)
