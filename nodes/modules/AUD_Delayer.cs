@@ -89,30 +89,30 @@ public partial class AUD_Delayer : AUD_Module
     // |  MODULE BEHAVIOR  |
     // +-------------------+
     // _____________________
-    protected override void SetBasePitchScale(float pitchScale)
+    protected override void SetBasePitchScale(float basePitchScale)
     {
         if (Sound == null) return;
-        Sound.RelativePitchScale = pitchScale * RelativePitchScale;
+        Sound.RelativePitchScale = AbsPitchFromBase(basePitchScale);
     }
-    protected override void SetRelativePitchScale(float pitchScale)
+    protected override void SetRelativePitchScale(float relativePitchScale)
     {
         if (Sound == null) return;
-        Sound.RelativePitchScale = BasePitchScale * pitchScale;
-    }
-
-    protected override void SetBaseVolumeDb(float volumeDb)
-    {
-        if (Sound == null) return;
-        Sound.RelativeVolumeDb = volumeDb + RelativeVolumeDb;
+        Sound.RelativePitchScale = AbsPitchFromRelative(relativePitchScale);
     }
 
-    protected override void SetRelativeVolumeDb(float volumeDb)
+    protected override void SetBaseVolumeDb(float baseVolumeDb)
     {
         if (Sound == null) return;
-        Sound.RelativeVolumeDb = BaseVolumeDb + volumeDb;
+        Sound.RelativeVolumeDb = AbsVolumeDbFromBase(baseVolumeDb);
     }
 
-    public override void _Ready()
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb)
+    {
+        if (Sound == null) return;
+        Sound.RelativeVolumeDb = AbsVolumeDbFromRelative(relativeVolumeDb);
+    }
+
+    protected override void ReadySpec()
     {
         if (Engine.IsEditorHint())
             return;
@@ -127,7 +127,7 @@ public partial class AUD_Delayer : AUD_Module
         _timer.Timeout += DeferredPlay;
     }
 
-    public override async void Play() => _timer.Start(_delay);
+    public override void Play() => _timer.Start(_delay);
     private void DeferredPlay() => Sound.Play();
 
     public override void Stop()
@@ -141,4 +141,6 @@ public partial class AUD_Delayer : AUD_Module
         }
     }
 
+    protected override void PitchTimeScale() =>
+        _sound.RelativePitchScale = AbsolutePitchScale;
 }

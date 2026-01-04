@@ -134,27 +134,27 @@ public partial class AUD_Randomizer : AUD_Module
     // |  MODULE BEHAVIOR  |
     // +-------------------+
     // _____________________
-    protected override void SetBaseVolumeDb(float volumeDb)
+    protected override void SetBaseVolumeDb(float baseVolumeDb)
     {
         if (Player == null) return;
-        Player.RelativeVolumeDb = volumeDb + RelativeVolumeDb;
+        Player.RelativeVolumeDb = AbsVolumeDbFromBase(baseVolumeDb);
     }
 
-    protected override void SetRelativeVolumeDb(float volumeDb)
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb)
     {
         if (Player == null) return;
-        Player.RelativeVolumeDb = BaseVolumeDb + volumeDb;
+        Player.RelativeVolumeDb = AbsVolumeDbFromRelative(relativeVolumeDb);
     }
 
-    protected override void SetBasePitchScale(float pitchScale)
+    protected override void SetBasePitchScale(float basePitchScale)
     {
         if (Player == null) return;
-        Player.RelativePitchScale = pitchScale * RelativePitchScale * _randomPitch;
+        Player.RelativePitchScale = AbsPitchFromBase(basePitchScale) * _randomPitch;
     }
-    protected override void SetRelativePitchScale(float pitchScale)
+    protected override void SetRelativePitchScale(float relativePitchScale)
     {
         if (Player == null) return;
-        Player.RelativePitchScale = BasePitchScale * pitchScale * _randomPitch;
+        Player.RelativePitchScale = AbsPitchFromRelative(relativePitchScale) * _randomPitch;
     }
 
     public override void Play()
@@ -166,4 +166,7 @@ public partial class AUD_Randomizer : AUD_Module
     }
 
     public override void Stop() => Player.Stop();
+
+    protected override void PitchTimeScale() =>
+        _player.RelativePitchScale = AbsolutePitchScale;
 }

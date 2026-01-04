@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using Godot.Collections;
 
 namespace GaudioProcessTree.Nodes.Modules;
 /// <summary>
@@ -51,6 +52,23 @@ public partial class AUD_TimeScaler : AUD_Module
             Sound = sounds[0];
     }
 
+    public override Array<Dictionary> _GetPropertyList()
+    {
+        Array<Dictionary> properties = base._GetPropertyList();
+        for (int i = 0; i < properties.Count; i++)
+        {
+            Dictionary dict = properties[i];
+            if (dict.ContainsKey("name") && (string)dict["name"] == "UseTimeScale")
+            {
+                properties.RemoveAt(i);
+                break;
+            }
+
+        }
+
+        return properties;
+    }
+
     // +-------------------+
     // |  CONFIG WARNINGS  |
     // +-------------------+
@@ -63,8 +81,8 @@ public partial class AUD_TimeScaler : AUD_Module
             warnings.Add("This node has no attached Sound to scale.\nConsider adding an AUD_Sound as a child.");
         if (TooManySounds())
             warnings.Add("This node has multiple Sound children. It will only scale one of them.\nConsider using AUD_LayeredSound as a child to delay multiple sounds.");
-        if (HasTimeScalerParent())
-            warnings.Add("This node's branch already contains an AUD_TimeScaler node.\nChaining AUD_TimeScaler can lead to unexpected behavior as it will apply scaling multiple times.");
+        if (HasTimeScalerParent(out string chainedScaleWarning))
+            warnings.Add(chainedScaleWarning);
 
         return [.. warnings];
     }
@@ -82,13 +100,25 @@ public partial class AUD_TimeScaler : AUD_Module
         return false;
     }
 
-    private bool HasTimeScalerParent()
+    private bool HasTimeScalerParent(out string warning)
     {
         Node parent = GetParent();
         while (parent is AUD_Module module)
-            if (module is AUD_TimeScaler)
+        {
+            if (module.UseTimeScale)
+            {
+                warning = "This node's root already uses pitch time scaling.\nChaining time scaling can lead to unexpected behavior as it will apply scaling multiple times.";
                 return true;
+            }
+            if (module is AUD_TimeScaler)
+            {
+                warning = "This node's branch already contains an AUD_TimeScaler node.\nChaining AUD_TimeScaler can lead to unexpected behavior as it will apply scaling multiple times.";
+                return true;
+            }
+            parent = parent.GetParent();
+        }
 
+        warning = "";
         return false;
     }
 
@@ -96,36 +126,39 @@ public partial class AUD_TimeScaler : AUD_Module
     // |  MODULE BEHAVIOR  |
     // +-------------------+
     // _____________________
-    protected override void SetBasePitchScale(float pitchScale)
+    /// <summary>
+    /// Overrides UseTimeScale to always be true, even if it is not a root node.
+    /// </summary>
+    protected override void ReadySpec() =>
+        UseTimeScale = true;
+
+    protected override void SetBasePitchScale(float basePitchScale)
     {
         if (Sound == null) return;
-        Sound.RelativePitchScale = pitchScale * RelativePitchScale * (float)Engine.TimeScale;
+        Sound.RelativePitchScale = AbsPitchFromBase(basePitchScale);
     }
-    protected override void SetRelativePitchScale(float pitchScale)
+    protected override void SetRelativePitchScale(float relativePitchScale)
     {
         if (Sound == null) return;
-        Sound.RelativePitchScale = BasePitchScale * pitchScale * (float)Engine.TimeScale;
+        Sound.RelativePitchScale = AbsPitchFromRelative(relativePitchScale);
     }
 
-    protected override void SetBaseVolumeDb(float volumeDb)
+    protected override void SetBaseVolumeDb(float baseVolumeDb)
     {
         if (Sound == null) return;
-        Sound.RelativeVolumeDb = volumeDb + RelativeVolumeDb;
+        Sound.RelativeVolumeDb = AbsVolumeDbFromBase(baseVolumeDb);
     }
 
-    protected override void SetRelativeVolumeDb(float volumeDb)
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb)
     {
         if (Sound == null) return;
-        Sound.RelativeVolumeDb = BaseVolumeDb + volumeDb;
+        Sound.RelativeVolumeDb = AbsVolumeDbFromRelative(relativeVolumeDb);
     }
 
     public override void Play() => _sound.Play();
 
     public override void Stop() => _sound.Stop();
 
-    public override void _Ready() =>
-        SetPhysicsProcess(!Engine.IsEditorHint());
-
-    public override void _PhysicsProcess(double delta) =>
-        _sound.RelativePitchScale = PitchScale * (float)Engine.TimeScale;
+    protected override void PitchTimeScale() =>
+        _sound.RelativePitchScale = AbsolutePitchScale;
 }

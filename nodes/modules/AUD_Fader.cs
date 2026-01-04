@@ -56,10 +56,7 @@ public partial class AUD_Fader : AUD_Module
         InitSoundChild();
 
         if (Engine.IsEditorHint())
-        {
-            SetPhysicsProcess(false);
             return;
-        }
 
         if (_sound == null)
             return;
@@ -70,7 +67,6 @@ public partial class AUD_Fader : AUD_Module
             _sound.RelativeVolumeDb = _mutedVolumeDb;
         else
             _sound.RelativeVolumeDb = VolumeDb;
-        SetPhysicsProcess(!_startMuted);
     }
     
     private void InitSoundChild()
@@ -135,21 +131,21 @@ public partial class AUD_Fader : AUD_Module
             _sound.RelativeVolumeDb = volumeDb;
     }
 
-    protected override void SetBaseVolumeDb(float volumeDb) =>
-        SetFaderVolumeDb(volumeDb + RelativeVolumeDb);
+    protected override void SetBaseVolumeDb(float baseVolumeDb) =>
+        SetFaderVolumeDb(AbsVolumeDbFromBase(baseVolumeDb));
 
-    protected override void SetRelativeVolumeDb(float volumeDb) =>
-        SetFaderVolumeDb(BaseVolumeDb + volumeDb);
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb) =>
+        SetFaderVolumeDb(AbsVolumeDbFromRelative(relativeVolumeDb));
 
-    protected override void SetBasePitchScale(float pitchScale)
+    protected override void SetBasePitchScale(float basePitchScale)
     {
         if (_sound == null) return;
-        _sound.RelativePitchScale = pitchScale * RelativePitchScale;
+        _sound.RelativePitchScale = AbsPitchFromBase(basePitchScale);
     }
-    protected override void SetRelativePitchScale(float pitchScale)
+    protected override void SetRelativePitchScale(float relativePitchScale)
     {
         if (_sound == null) return;
-        _sound.RelativePitchScale = BasePitchScale * pitchScale;
+        _sound.RelativePitchScale = AbsPitchFromRelative(relativePitchScale);
     }
 
     /// <summary>
@@ -180,11 +176,10 @@ public partial class AUD_Fader : AUD_Module
     {
         _fadeStart = AUD_Time.ScaledTicksMsec;
         _startVolume = VolumeDb;
-        SetPhysicsProcess(true);
     }
 
 
-    public override void _PhysicsProcess(double delta) =>
+    protected override void PhysicsProcessSpec(double delta) =>
         _onUpdate?.Invoke();
 
     private void Fade()
@@ -195,7 +190,6 @@ public partial class AUD_Fader : AUD_Module
         {
             _sound.RelativeVolumeDb = _currentTargetVolume;
             _onUpdate -= Fade;
-            SetPhysicsProcess(false);
 
             if (_muting)
                 ForwardFinished();
@@ -208,4 +202,7 @@ public partial class AUD_Fader : AUD_Module
         
         _sound.RelativeVolumeDb = lerped;
     }
+
+    protected override void PitchTimeScale() =>
+        _sound.RelativePitchScale = AbsolutePitchScale;
 }

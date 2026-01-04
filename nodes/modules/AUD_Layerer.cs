@@ -95,11 +95,11 @@ public partial class AUD_Layerer : AUD_Module
         foreach (AUD_Sound layer in _layers)
             layer.RelativeVolumeDb = volumeDb;
     }
-    protected override void SetBaseVolumeDb(float volumeDb) =>
-        SetLayersVolumeDb(volumeDb + RelativeVolumeDb);
+    protected override void SetBaseVolumeDb(float baseVolumeDb) =>
+        SetLayersVolumeDb(AbsVolumeDbFromBase(baseVolumeDb));
 
-    protected override void SetRelativeVolumeDb(float volumeDb) =>
-        SetLayersVolumeDb(BaseVolumeDb + volumeDb);
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb) =>
+        SetLayersVolumeDb(AbsVolumeDbFromRelative(relativeVolumeDb));
 
     private void SetLayersPitchScale(float pitchScale)
     {
@@ -109,11 +109,11 @@ public partial class AUD_Layerer : AUD_Module
         foreach (AUD_Sound layer in _layers)
             layer.RelativePitchScale = pitchScale;
     }
-    protected override void SetBasePitchScale(float pitchScale) =>
-        SetLayersPitchScale(pitchScale * RelativePitchScale);
+    protected override void SetBasePitchScale(float basePitchScale) =>
+        SetLayersPitchScale(AbsPitchFromBase(basePitchScale));
 
-    protected override void SetRelativePitchScale(float pitchScale) =>
-        SetLayersPitchScale(BasePitchScale * pitchScale);
+    protected override void SetRelativePitchScale(float relativePitchScale) =>
+        SetLayersPitchScale(AbsPitchFromRelative(relativePitchScale));
 
     public override void Play()
     {
@@ -132,5 +132,10 @@ public partial class AUD_Layerer : AUD_Module
     {
         if (-- _playingSounds == 0)
             ForwardFinished();
+    }
+
+    protected override void PitchTimeScale()
+    {
+        SetLayersPitchScale(AbsolutePitchScale);
     }
 }

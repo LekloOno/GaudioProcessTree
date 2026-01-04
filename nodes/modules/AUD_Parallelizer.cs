@@ -94,29 +94,27 @@ public partial class AUD_Parallelizer : AUD_Randomizer
     // |  MODULE BEHAVIOR  |
     // +-------------------+
     // _____________________
-    private float AbsolutePitch(float randomPitch, float parallelPitch) =>
+    private float VoiceAbsolutePitch(float randomPitch, float parallelPitch) =>
         randomPitch * parallelPitch * Player.PitchScale;
 
     private void SetParallelPitchScale(float pitchScale)
     {
         foreach (VoiceTracker tracker in _voices)
         {
-            float voicePitch = AbsolutePitch(tracker.Voice.RandomPitch, pitchScale);
+            float voicePitch = VoiceAbsolutePitch(tracker.Voice.RandomPitch, pitchScale);
             _playback.SetStreamPitchScale(tracker.Voice.Id, voicePitch);
         }
     }
 
-    protected override void SetBasePitchScale(float pitchScale) =>
-        SetParallelPitchScale(pitchScale * RelativePitchScale);
-    protected override void SetRelativePitchScale(float pitchScale) =>
-        SetParallelPitchScale(BasePitchScale * pitchScale);
+    protected override void SetBasePitchScale(float basePitchScale) =>
+        SetParallelPitchScale(AbsPitchFromBase(basePitchScale));
+    protected override void SetRelativePitchScale(float relativePitchScale) =>
+        SetParallelPitchScale(AbsPitchFromRelative(relativePitchScale));
     
     protected float _pitchBaseDelta;
 
-    public override void _Ready()
+    protected override void ReadySpec()
     {
-        SetPhysicsProcess(!Engine.IsEditorHint());
-
         if (Engine.IsEditorHint())
             return;
             
@@ -125,7 +123,7 @@ public partial class AUD_Parallelizer : AUD_Randomizer
         _playback = Player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
     }
 
-    public override void _PhysicsProcess(double delta)
+    protected override void PhysicsProcessSpec(double delta)
     {
         LinkedListNode<VoiceTracker> tracker = _voices.First;
         while (tracker != null)
@@ -139,13 +137,14 @@ public partial class AUD_Parallelizer : AUD_Randomizer
 
     private bool Cycle(VoiceTracker tracker, double delta)
     {
-        tracker.Lifetime -= delta * AbsolutePitch(tracker.RandomPitch, PitchScale);
+        // Don't use AbsolutePitch in VoiceAbsolutePitch since the delta will already be scaled by time scale.
+        tracker.Lifetime -= delta * VoiceAbsolutePitch(tracker.RandomPitch, PitchScale);
         return tracker.Lifetime <= 0;
     }
 
     public void EnqueueVoice(AudioStream stream, float randomPitch)
     {
-        float pitchScale = AbsolutePitch(randomPitch, PitchScale);
+        float pitchScale = VoiceAbsolutePitch(randomPitch, PitchScale);
 
         long newVoice = _playback.PlayStream(stream, 0, 0, pitchScale);
         double length = stream.GetLength();

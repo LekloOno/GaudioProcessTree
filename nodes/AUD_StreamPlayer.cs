@@ -23,17 +23,17 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
     public abstract AudioStream Stream {get; set;}
     public abstract StringName Bus {get; set;}
     public abstract AudioStreamPlayback GetStreamPlayBack();
-    protected override void SetBaseVolumeDb(float volumeDb) =>
-        VolumeDb = volumeDb + RelativeVolumeDb;
+    protected override void SetBaseVolumeDb(float baseVolumeDb) =>
+        VolumeDb = AbsVolumeDbFromBase(baseVolumeDb);
 
-    protected override void SetBasePitchScale(float pitchScale) =>
-        PitchScale = pitchScale * RelativePitchScale;
+    protected override void SetBasePitchScale(float basePitchScale) =>
+        PitchScale = AbsPitchFromBase(basePitchScale);
 
-    protected override void SetRelativeVolumeDb(float volumeDb) =>
-        VolumeDb = BaseVolumeDb + volumeDb;
+    protected override void SetRelativeVolumeDb(float relativeVolumeDb) =>
+        VolumeDb = AbsVolumeDbFromRelative(relativeVolumeDb);
 
-    protected override void SetRelativePitchScale(float pitchScale) =>
-        PitchScale = BasePitchScale * pitchScale;
+    protected override void SetRelativePitchScale(float relativePitchScale) =>
+        PitchScale = AbsPitchFromRelative(relativePitchScale);
 
     public override void Stop()
     {
@@ -48,4 +48,6 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
     /// Defines the way of concretely stopping the wrapped stream player.
     /// </summary>
     protected abstract void StopPlayer();
+    protected override void PitchTimeScale() =>
+        PitchScale = AbsolutePitchScale;
 }

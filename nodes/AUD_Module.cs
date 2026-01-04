@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using Godot;
-
 
 namespace GaudioProcessTree.Nodes;
 
@@ -23,7 +21,11 @@ public abstract partial class AUD_Module : AUD_Sound
         get => BasePitchScale * RelativePitchScale;
         protected set => BasePitchScale = value / RelativePitchScale; 
     }
-
+    
+    // +-----------------+
+    // |  CONFIGURATION  |
+    // +-----------------+
+    // ____________________
     protected override sealed void EnterTreeSpec()
     {
         ModuleEnterTree();
@@ -31,7 +33,6 @@ public abstract partial class AUD_Module : AUD_Sound
         if (Engine.IsEditorHint())
             UpdateConfigurationWarnings();
     }
-
     /// <summary>
     /// Defines specialized behavior once the AUD_Sound _EnterTree routine has been executed, and before updating configuration warnings. <br/>
     /// <br/>
@@ -39,7 +40,17 @@ public abstract partial class AUD_Module : AUD_Sound
     /// Thus, it is very likely that base, relative and absolute volumeDb/PitchScale have already been initialized depending on their implementation.
     /// </summary>
     protected abstract void ModuleEnterTree();
+    /// <summary>
+    /// Called when a sound child entered the tree. <br/>
+    /// This callback is typically used to auto-reference it in its attributes.
+    /// </summary>
+    /// <param name="sound">The new child node.</param>
+    protected abstract void OnSoundChildChanged(List<AUD_Sound> sounds);
 
+    // +-------------------+
+    // |  CONFIG WARNINGS  |
+    // +-------------------+
+    // _____________________
     public override void _Notification(int what)
     {
         if (what != NotificationChildOrderChanged)
@@ -54,11 +65,4 @@ public abstract partial class AUD_Module : AUD_Sound
 
         UpdateConfigurationWarnings();
     }
-
-    /// <summary>
-    /// Called when a sound child entered the tree. <br/>
-    /// This callback is typically used to auto-reference it in its attributes.
-    /// </summary>
-    /// <param name="sound">The new child node.</param>
-    protected abstract void OnSoundChildChanged(List<AUD_Sound> sounds);
 }
