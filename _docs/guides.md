@@ -1,4 +1,4 @@
-@page 2_guides Guides
+@page guides Guides
 
 @section 2_1_concepts General Concepts
 

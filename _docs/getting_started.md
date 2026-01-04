@@ -1,4 +1,4 @@
-@page geting_started Getting Started
+@page getting_started Getting Started
 
 @section 1_1_installation Installation
 
