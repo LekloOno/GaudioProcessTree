@@ -7,10 +7,9 @@ PROJECT_BRIEF          = "Godot plugin for audio process tree"
 
 # Input
 INPUT                  = .
-FILE_PATTERNS          = *.cs
-
-# Recursively scan subfolders
+FILE_PATTERNS          = *.cs _docs/*.md
 RECURSIVE              = YES
+IMAGE_PATH = _docs/res
 
 # Language
 OPTIMIZE_OUTPUT_FOR_CSHARP = YES
