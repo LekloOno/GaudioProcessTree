@@ -44,7 +44,7 @@ Parenting AUD_Sound:
 - @ref AUD_Fader – fading sounds in and out
 - @ref AUD_Sequencer – sequential playback
 - @ref AUD_Delayer – delayed playback
-- 
+- @ref AUD_TimeScaler - scales the pitch of tree branch with engine's time scale 
 Parenting AUD_StreamPlayer:
 - @ref AUD_RandomSound – randomizing sound selection and pitch
 - @ref AUD_ParallelSound – running randomized streams in parallel
