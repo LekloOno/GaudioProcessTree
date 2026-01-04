@@ -1,4 +1,3 @@
-@mainpage GaudioProcessTree
 # GaudioProcessTree
 
 [![Documentation](https://img.shields.io/badge/docs-GaudioProcessTree-blue)](https://lekloono.github.io/GaudioProcessTree/)  
