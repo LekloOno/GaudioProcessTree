@@ -10,23 +10,22 @@ You can parent any `AUD_Sound` derivative to another one, creating
 tree-like processing chains.
 
 The plugin enables multiple features:
-- Relative volume and pitch propagation, in a similar fashion to local and global transform parenting on Node2D/Node3D.
-- Dynamic time-relative pitch scaling, to stretch and squeeze streams when time scale is changed (through any root node configuration, or through the specific AUD_TimeScaler)
-- Bindings for time-scale compliance.
-- Various built-in processing modules, like fader, randomizer, sequencer, etc.
-- Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
+- Relative volume and pitch propagation, in a similar fashion to local and global transform parenting on Node2D/Node3D - @ref relative_properties
+- Dynamic time-relative pitch scaling, to stretch and squeeze streams when time scale is changed (through any root node configuration, or through the specific AUD_TimeScaler) - @ref time_scaling
+- Bindings for time-scale compliance - @ref time_dependency
+- Various built-in processing modules, like fader, randomizer, sequencer, etc. - @ref aud_module
+- Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness".  - @ref aud_streamplayer
 
 @subsection aud_sound AUD_Sound common concepts
 
-@subsubsection relative_properties Relative levels of VolumeDb and PitchScale
-Each @ref AUD_Sound has:
+@subsubsection relative_properties Relative levels of VolumeDb and PitchScale  
 
+Each @ref AUD_Sound has four different designations of its **volume (db)** and **pitch scale** properties:
 - Base
 - Relative
 - Local
 - Absolute
-
-designation for both its **volume (db)** and **pitch scale** properties.
+<br/><br/>
 
 **Base** volume/pitch is a value you can set in the inspector, think of it as the "local transform" of Node2D that you tweak in your scene, but sound-wise.
 
@@ -54,7 +53,7 @@ This is fully dynamic, even already playing sound will get properly modulated in
 
 The option is visible for any root node of a GaudioProcessTree, under "AUD_Sound Time" category, as "Use Time Scale" flag.
 
-![alt text](gaudio_use_time_scale.png)
+![Use time scale](use_time_scale.png)
 
 @note
 This option is only visible for root node (of a GaudioProcessTree), as it controls the entire tree scaling behavior.

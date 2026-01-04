@@ -14,7 +14,7 @@ The plugin enables:
 - Various built-in processing modules, like fader, randomizer, sequencer, etc.
 - Wrapping of Godot's StreamPlayer/2D/3D behind a single abstract interface to make GaudioProcessTrees cross compatible with any "spatialness". 
 
-You can find a brief introduction to the basic principle of the plugin in the [AUD_Sound common concepts](https://lekloono.github.io/GaudioProcessTree/guides.html#aud_sound) section.
+You can find a brief introduction to the basic principles of the plugin in the [AUD_Sound common concepts](https://lekloono.github.io/GaudioProcessTree/guides.html#aud_sound) section.
 
 ## Table of Content
 
