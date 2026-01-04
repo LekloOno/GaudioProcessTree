@@ -1,4 +1,5 @@
-@page time_dependency AUD_Time Dependency
+@ingroup guides
+@page 3_time_dependency AUD_Time Dependency
 
 @section simplest Simplest – Delete or modify AUD_Fader
 

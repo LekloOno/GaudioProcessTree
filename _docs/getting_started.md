@@ -1,4 +1,6 @@
-@page getting_started Getting Started
+@defgroup guides User Guides
+@ingroup guides
+@page 1_getting_started Getting Started
 
 @section installation Installation
 
@@ -35,4 +37,4 @@ You have four option:
 - Intermediate - Use the provided time scale template.
 - Advanced - Implement your own `AUD_ILocalTime`.
 
-A step-by-step guide for each of these options is available in @ref time_dependency.
+A step-by-step guide for each of these options is available in @ref 3_time_dependency.
