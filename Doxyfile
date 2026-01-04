@@ -7,7 +7,7 @@ PROJECT_BRIEF          = "Godot plugin for audio process tree"
 
 # Input
 INPUT                  = . _docs
-FILE_PATTERNS          = *.cs _docs/*.md
+FILE_PATTERNS          = *.cs *.md
 RECURSIVE              = YES
 IMAGE_PATH = _docs/res
 
