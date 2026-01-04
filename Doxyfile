@@ -7,7 +7,7 @@ PROJECT_BRIEF          = "Godot plugin for audio process tree"
 
 # Input
 INPUT                  = . _docs
-FILE_PATTERNS          = *.cs *.md
+FILE_PATTERNS          = *.cs _docs/*.md
 RECURSIVE              = YES
 IMAGE_PATH = _docs/res
 
@@ -47,3 +47,5 @@ HTML_EXTRA_STYLESHEET  = doxygen-awesome/doxygen-awesome.css
 MARKDOWN_SUPPORT = YES
 AUTOLINK_SUPPORT = YES
 USE_MDFILE_AS_MAINPAGE = _docs/mainpage.md
+
+SHOW_USED_FILES = NO
