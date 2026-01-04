@@ -56,7 +56,7 @@ The option is visible for any root node of a GaudioProcessTree, under "AUD_Sound
 
 ![alt text](gaudio_use_time_scale.png)
 
-@attention
+@note
 This option is only visible for root node (of a GaudioProcessTree), as it controls the entire tree scaling behavior.
 
 Additionnaly, you can use the AUD_TimeScaler node to time scale only parts of a GaudioProcessTree, if necessary.
@@ -87,7 +87,7 @@ Parenting AUD_StreamPlayer:
 They wrap Godot’s `AudioStreamPlayer` types in a generic way, allowing the same
 processing tree to work with 2D, 3D, or non-spatial audio.
 
-@important
+@warning
 Inside GaudioProcessTrees, do not try to change the volume/pitch of a sound through the `AudioStreamPlayer`. It will have no effect, as your changes will be overwritten by the containing `AUD_StreamPlayer`. You should set these properties in the Base volume and pitch of the `AUD_StreamPlayer` instead.
 
 @section time_dependency AUD_Time Dependency
