@@ -61,7 +61,7 @@ public partial class AUD_Fader : AUD_Module
         if (_sound == null)
             return;
         
-        _mutedVolumeDb = -80f - _sound.VolumeDb;
+        _mutedVolumeDb = -80f - _sound.BaseVolumeDb;
 
         if (_startMuted)
             _sound.RelativeVolumeDb = _mutedVolumeDb;
