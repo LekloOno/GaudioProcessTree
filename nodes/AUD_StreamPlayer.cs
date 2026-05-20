@@ -49,5 +49,5 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
     /// </summary>
     protected abstract void StopPlayer();
     protected override void PitchTimeScale() =>
-        PitchScale = AbsolutePitchScale;
+        PitchScale = BasePitchScale * RelativePitchScale * (float)_timeScale();
 }
