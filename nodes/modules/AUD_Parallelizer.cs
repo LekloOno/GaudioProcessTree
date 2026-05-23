@@ -123,7 +123,7 @@ public partial class AUD_Parallelizer : AUD_Randomizer
         _playback = Player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
     }
 
-    protected override void PhysicsProcessSpec(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         LinkedListNode<VoiceTracker> tracker = _voices.First;
         while (tracker != null)

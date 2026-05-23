@@ -48,6 +48,11 @@ public abstract partial class AUD_StreamPlayer : AUD_Sound
     /// Defines the way of concretely stopping the wrapped stream player.
     /// </summary>
     protected abstract void StopPlayer();
-    protected override void PitchTimeScale() =>
+
+    public override void _PhysicsProcess(double delta)
+    {
         PitchScale = BasePitchScale * RelativePitchScale * (float)_timeScale();
+    }
+
+    protected override void PropagateTimeScale() {}
 }

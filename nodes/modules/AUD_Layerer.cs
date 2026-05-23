@@ -134,8 +134,9 @@ public partial class AUD_Layerer : AUD_Module
             ForwardFinished();
     }
 
-    protected override void PitchTimeScale()
+    protected override void PropagateTimeScale()
     {
-        SetLayersPitchScale(AbsolutePitchScale);
+        foreach (AUD_Sound layer in _layers)
+            layer.UpdateEffectiveTimeScale();
     }
 }

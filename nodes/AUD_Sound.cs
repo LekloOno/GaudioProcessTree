@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using GaudioProcessTree.Nodes;
 using Godot;
 using Godot.Collections;
@@ -36,11 +37,7 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
         SetBasePitchScale(_basePitchScale);
         
         if (UseTimeScale)
-        {
-            PitchTimeScaleHook -= PitchTimeScale;
-            PitchTimeScaleHook += PitchTimeScale;
             _timeScale = () => Engine.TimeScale;
-        }
 
         EnterTreeSpec();
     }
@@ -174,8 +171,8 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     // |   TIME SCALING    |
     // +-------------------+
     // _____________________
-    private event Action PitchTimeScaleHook;
     protected Func<double> _timeScale = () => 1.0;
+
     private bool _useTimeScale = true;
     public bool UseTimeScale
     {
@@ -185,26 +182,32 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
             if (_useTimeScale == value)
                 return;
                 
-            if (_useTimeScale)
-                PitchTimeScaleHook -= PitchTimeScale;
-
             _useTimeScale = value;
-            if (_useTimeScale)
-            {
-                UpdateConfigurationWarnings();
-                _timeScale = () => Engine.TimeScale;
-                PitchTimeScaleHook += PitchTimeScale;
-            }
-            else
-                _timeScale = () => 1.0;
+            UpdateEffectiveTimeScale();
+            PropagateTimeScale();
+            UpdateConfigurationWarnings();
         }
     }
+
+    public bool EffectiveTimeScale => _useTimeScale || (TryGetParent(out AUD_Module? parent ) && parent.EffectiveTimeScale);
+    public void UpdateEffectiveTimeScale()
+    {
+        if (EffectiveTimeScale)
+            _timeScale = () => Engine.TimeScale;
+        else
+            _timeScale = () => 1.0;
+    }
+
+    /// <summary>
+    /// Propagate a time scale setting change to children, typically call UpdateEffectiveTimeScale on every children.
+    /// </summary>
+    protected abstract void PropagateTimeScale();
     
     public override Array<Dictionary> _GetPropertyList()
     {
         Array<Dictionary> properties = [];
-        
-        if (IsRootModule())
+
+        if (!TryGetParent(out AUD_Module? parent) || parent.UseTimeScale == false)
         {
             properties.Add(new Dictionary
             {
@@ -240,14 +243,27 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
         return default;
     }
 
+    private bool TryGetParent([NotNullWhen(true)] out AUD_Module? parentModule)
+    {
+        Node parent = GetParent();
+        if (parent is AUD_Module module)
+        {
+            parentModule = module;
+            return true;
+        }
+        
+        parentModule = null;
+        return false;
+    }
+
     private bool IsRootModule() =>
         GetParent() is not AUD_Module;
 
     public sealed override void _Ready()
     {
-        // Ensure time scale is disabled if not root
-        if (GetParent() is AUD_Module)
-            UseTimeScale = false;
+        // Ensure time scale is propagated from parent
+        if (TryGetParent(out AUD_Module? parent) && parent.UseTimeScale == true)
+            UseTimeScale = true;
 
         SetPhysicsProcess(!Engine.IsEditorHint());
         ReadySpec();
@@ -257,22 +273,4 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     /// This prevents the user from unintendedly hiding important AUD_Module's _Ready base routines.
     /// </summary>
     protected virtual void ReadySpec(){}
-
-    public sealed override void _PhysicsProcess(double delta)
-    {
-        PitchTimeScaleHook?.Invoke();
-        PhysicsProcessSpec(delta);
-    }
-    /// <summary>
-    /// Allows the implementing class to define further custom _PhysicsProcess routines. <br/>
-    /// This prevents the user from unintendedly hiding important AUD_Module's _PhysicsProcess base routines.
-    /// </summary>
-    protected virtual void PhysicsProcessSpec(double delta){}
-    /// <summary>
-    /// Defines how engine-time scaling should affect the pitch scale of this module, if enabled. <br/>
-    /// <br/>
-    /// If you don't plan to use time scaling, you can just disable it in the root node of your processing tree, 
-    /// but you should always provide an implementation, typically propagate to children modules' relative pitch scale.
-    /// </summary>
-    protected abstract void PitchTimeScale();
 }

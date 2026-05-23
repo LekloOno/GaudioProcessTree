@@ -167,6 +167,8 @@ public partial class AUD_Randomizer : AUD_Module
 
     public override void Stop() => Player.Stop();
 
-    protected override void PitchTimeScale() =>
-        _player.RelativePitchScale = AbsolutePitchScale * _randomPitch;
+    protected override void PropagateTimeScale()
+    {
+        _player.UpdateEffectiveTimeScale();
+    }
 }

@@ -159,6 +159,8 @@ public partial class AUD_TimeScaler : AUD_Module
 
     public override void Stop() => _sound.Stop();
 
-    protected override void PitchTimeScale() =>
-        _sound.RelativePitchScale = AbsolutePitchScale;
+    protected override void PropagateTimeScale()
+    {
+        _sound.UpdateEffectiveTimeScale();
+    }
 }

@@ -141,6 +141,8 @@ public partial class AUD_Delayer : AUD_Module
         }
     }
 
-    protected override void PitchTimeScale() =>
-        _sound.RelativePitchScale = AbsolutePitchScale;
+    protected override void PropagateTimeScale()
+    {
+        _sound.UpdateEffectiveTimeScale();
+    }
 }

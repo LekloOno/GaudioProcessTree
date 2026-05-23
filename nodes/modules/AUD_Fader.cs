@@ -179,7 +179,7 @@ public partial class AUD_Fader : AUD_Module
     }
 
 
-    protected override void PhysicsProcessSpec(double delta) =>
+    public override void _PhysicsProcess(double delta) =>
         _onUpdate?.Invoke();
 
     private void Fade()
@@ -203,6 +203,8 @@ public partial class AUD_Fader : AUD_Module
         _sound.RelativeVolumeDb = lerped;
     }
 
-    protected override void PitchTimeScale() =>
-        _sound.RelativePitchScale = AbsolutePitchScale;
+    protected override void PropagateTimeScale()
+    {
+        _sound.UpdateEffectiveTimeScale();
+    }
 }
