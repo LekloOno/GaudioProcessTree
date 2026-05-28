@@ -65,7 +65,7 @@ public partial class AUD_Randomizer : AUD_Module
     // |  CONFIGURATION  |
     // +-----------------+
     // ____________________
-    protected override void ModuleEnterTree()
+    protected sealed override void ModuleEnterTree()
     {
         Player = null;
         foreach (Node node in GetChildren())
@@ -74,7 +74,11 @@ public partial class AUD_Randomizer : AUD_Module
                 Player = player;
                 return;
             }
+
+        RandomizerEnterTree();
     }
+
+    protected virtual void RandomizerEnterTree() {}
 
     protected override void OnSoundChildChanged(List<AUD_Sound> sounds)
     {

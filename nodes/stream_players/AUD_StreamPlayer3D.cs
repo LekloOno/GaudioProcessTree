@@ -36,6 +36,16 @@ public partial class AUD_StreamPlayer3D : AUD_StreamPlayer
         }
     }
 
+    public override bool Playing
+    {
+        get
+        {
+            if (_player.Stream == null)
+                return false;
+            return _player.Playing;
+        }
+    }
+
     public override float VolumeDb
     {
         get => _player == null ? 0f : _player.VolumeDb;

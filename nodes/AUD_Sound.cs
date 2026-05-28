@@ -49,6 +49,14 @@ public abstract partial class AUD_Sound : Node, AUD_ISound
     /// </summary>
     protected virtual void EnterTreeSpec(){}
 
+    public sealed override void _ExitTree()
+    {
+        if (Engine.IsEditorHint())
+            return;
+
+        Stop();
+    }
+
     // +-----------------+
     // |  BASE BEHAVIOR  |
     // +-----------------+

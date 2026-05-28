@@ -175,6 +175,12 @@ public partial class AUD_Parallelizer : AUD_Randomizer
 
     public override void Play()
     {
+        if (!Player.Playing)
+        {
+            Player.Play();
+            _playback = Player.GetStreamPlayBack() as AudioStreamPlaybackPolyphonic;
+        }
+
         AudioStream stream = _sounds.PickRandom();
         float randomPitch = (float)GD.RandRange(MinPitch, MaxPitch);
 
@@ -182,5 +188,11 @@ public partial class AUD_Parallelizer : AUD_Randomizer
             DequeueVoice();
         
         EnqueueVoice(stream, randomPitch);
+    }
+
+    public override void Stop()
+    {
+        _voices.Clear();
+        Player.Stop();
     }
 }
