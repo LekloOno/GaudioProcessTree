@@ -143,6 +143,6 @@ public partial class AUD_Delayer : AUD_Module
 
     protected override void PropagateTimeScale()
     {
-        _sound.UpdateEffectiveTimeScale();
+        _sound?.UpdateEffectiveTimeScale();
     }
 }

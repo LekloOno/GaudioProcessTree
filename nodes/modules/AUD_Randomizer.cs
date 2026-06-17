@@ -173,6 +173,6 @@ public partial class AUD_Randomizer : AUD_Module
 
     protected override void PropagateTimeScale()
     {
-        _player.UpdateEffectiveTimeScale();
+        _player?.UpdateEffectiveTimeScale();
     }
 }

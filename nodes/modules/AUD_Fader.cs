@@ -205,6 +205,6 @@ public partial class AUD_Fader : AUD_Module
 
     protected override void PropagateTimeScale()
     {
-        _sound.UpdateEffectiveTimeScale();
+        _sound?.UpdateEffectiveTimeScale();
     }
 }
